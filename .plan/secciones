@@ -1,0 +1,78 @@
+- Dashboard
+    - Resumen de datos personales (P, A)
+    - Licencias vigentes (P, A)
+    - Estadísticas trimestre actual (P, A)
+    - Estadísticas trimestre anterior (P, A)
+
+- Perfil
+    - Datos de contacto (P, P/Int/Ays)
+    - Hoja de servicio (P, P/Int/Ays)
+    - Premios (P, P/Int/Ays)
+    - Guardia nocturna (P, A)
+
+- Voluntarios
+    - Listado con buscador (T, A)
+    - Agregar voluntario (X, Int/Ays)
+
+- Actos
+    - Calendario (T, A)
+    - Crear borrador de acto (X, T)
+    - Revisar actos creados (X, Ays)
+
+- Guardia nocturna
+    - Integrantes (T, Cap/Tts/JGN)
+    - Jefe de guardia (T, Cap/Tts/JGN)
+    - Solicitar permisos (T, GN)
+    - Aprobar permisos (X, Cap/Tts/JGN)
+    - Libro de Guardia Nocturna (X, Cap/Tts/JGN)
+
+- Libro Diario de Oficiales
+    - Agregar relato a incendios y llamados (X, Cap/Tts)
+    - Anotar oficiales subrogantes e interinos (X, Dir/Sec/Cap)
+    - Anotar otros nombramientos (X, Dir/Sec/Cap/Tts)
+    - Anotar Competencias (X, Cap/Tts)
+    - Agregar detalle de reuniones, J.O. y C.D. (X, Sec/Ays)
+    - Otras anotaciones (X, Dir/Sec/Cap/Tts)
+    - Generar Libro (X, Dir/Sec/Cap/Tts)
+
+- Licencias
+    - Solicitar licencias (P, P)
+    - Aprobar licencias (X, Cap)
+
+- Intendencia
+    - Reportar problema (P, T)
+    - Revisar reportes (X, Int/Cap)
+
+- Material mayor
+    - Reportar problema (P, T)
+    - Revisar reportes (X, Maq/Cap)
+    - TODO: ver con maquinista que más
+
+- Tesorería
+    - Ver detalle de cuotas (P, A)
+    - Marcar cuotas pagadas (X, Tes/Cap/Int)
+    - Condonaciones (X, Tes/Cap/Int/Sec)
+
+- Secretaría
+    - Ver actas de Sesiones de Compañía (T, A)
+    - Ver memorias (T, A)
+    - Ver actas de Juntas de Oficiales (Ofs, A)
+    - Ver actas de Consejos de Disciplina (CDs/Dir/Cap/Sec, A)
+    - Cargar actas o memorias (X, Sec)
+
+- Checklists
+    - TODO: definir
+
+- Recursos
+    - TODO: definir
+
+*Permisos: el primer permiso corresponde a ver y el segundo a editar.
+    - P: personal
+    - T: todos
+    - Dir, Cap, Tts, Sec, Tes, Maq, Int, Ays: respectivos oficiales
+    - Ofs: todos los oficiales
+    - CDs: consejeros de Disciplina
+    - JGN: jefe de guardia nocturna
+    - GN: guardianes
+    - A: automático
+    - X: nadie
