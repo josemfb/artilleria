@@ -5,18 +5,19 @@
     - Estadísticas trimestre anterior (P, A)
 
 - Perfil
-    - Datos de contacto (P, P/Int/Ays)
-    - Hoja de servicio (P, P/Int/Ays)
-    - Premios (P, P/Int/Ays)
+    - Datos de contacto (P, P/Sec/Int/Ays)
+    - Hoja de servicio (P, Sec/Int/Ays)
+    - Premios (P, Sec/Int/Ays)
     - Guardia nocturna (P, A)
 
 - Voluntarios
     - Listado con buscador (T, A)
-    - Agregar voluntario (X, Int/Ays)
+    - Agregar voluntario (X, Sec/Int/Ays)
 
 - Actos
     - Calendario (T, A)
     - Crear borrador de acto (X, T)
+    - Agregar información material mayor (TODO: permisos)
     - Revisar actos creados (X, Ays)
 
 - Guardia nocturna
@@ -42,6 +43,7 @@
 - Intendencia
     - Reportar problema (P, T)
     - Revisar reportes (X, Int/Cap)
+    - TODO: ver con intendente que más
 
 - Material mayor
     - Reportar problema (P, T)
