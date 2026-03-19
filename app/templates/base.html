@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Artillería - Quinta Compañía</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .alert { padding: 10px; background-color: #f0f0f0; margin-bottom: 10px; border: 1px solid #ccc; }
+    </style>
+  </head>
+  <body>
+    <nav>
+        <a href="{{ url_for('main.index') }}">Inicio</a> | 
+        <a href="{{ url_for('main.add_user') }}">Agregar Voluntario</a>
+    </nav>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>
