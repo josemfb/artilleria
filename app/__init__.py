@@ -1,10 +1,19 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase
+
 from config import Config
 
 
+class Base(DeclarativeBase):
+    """
+    Clase base declarativa, para evitar problemas con MyPy.
+    """
+    pass
+
 # Initialize extensions
-db = SQLAlchemy()
+db = SQLAlchemy(model_class=Base)
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -15,6 +24,7 @@ def create_app(config_class=Config):
 
     # Register Blueprints
     from .routes.main import main_bp
+
     app.register_blueprint(main_bp)
 
     return app
