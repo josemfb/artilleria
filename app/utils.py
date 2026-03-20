@@ -9,7 +9,7 @@ def validate_and_format_run(run: str) -> str:
     1. Limpia el input (removiendo puntos, guiones y espacios)
     2. Valida la estructura y el dígito verificador.
     3. Le da el formato correcto
-    
+
     :param run: El RUN a revisar (ej.: '12345678k', '12.345.678-K').
     :return: El RUN formateado (ej.: '12.345.678-K').
     :raises ValueError: Si la validación del RUN falla.
@@ -40,8 +40,10 @@ def validate_and_format_run(run: str) -> str:
         dv_esperado = str(resto)
 
     if dv != dv_esperado:
-        raise ValueError(f"Dígito de verificación no válido. "
-                         f"Se esperaba {dv_esperado}, pero se recibió {dv}")
+        raise ValueError(
+            f"Dígito de verificación no válido. "
+            f"Se esperaba {dv_esperado}, pero se recibió {dv}"
+        )
 
     run_formateado = f"{int(cuerpo):,}".replace(",", ".")
     return f"{run_formateado}-{dv}"
