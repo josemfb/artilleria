@@ -5,4 +5,9 @@ del Cuerpo de Bomberos de Santiago, Bomba «Arturo Prat».
 
 En desarrollo.
 
-Backend: Python (Flask)
+
+- Python (Flask)
+- En cada archivo:
+    - `isort .`
+    - `black .`
+    - `flake8 --extend-exclude '.venv', '.idea', '.plan' --max-line-length 100 .`
