@@ -169,7 +169,7 @@ class Cargo(db.Model):
     nombre_cargo = db.Enum(
             *CARGOS,
             name="cargo_enum"
-        ),
+        )
     fecha_inicio = db.Column(db.Date)
     fecha_termino = db.Column(db.Date, nullable=True)
 
