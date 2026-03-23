@@ -1,4 +1,5 @@
 import os
+
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -39,7 +40,9 @@ class Usuario(UserMixin, db.Model):
         try:
             run_formatted = validate_and_format_run(self.run)
             filename = f"{run_formatted}.jpg"
-            file_path = os.path.join(current_app.static_folder, "profile_photos", filename)
+            file_path = os.path.join(
+                current_app.static_folder, "profile_photos", filename
+            )
             if os.path.exists(file_path):
                 return f"profile_photos/{filename}"
         except Exception:
