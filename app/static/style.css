@@ -143,3 +143,80 @@ body {
     margin: 40px auto;
     text-align: center;
 }
+
+/* User Menu in Navbar */
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu-toggle {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    font-family: inherit;
+}
+
+.user-menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px; /* Squircle-ish shape */
+    object-fit: cover;
+    background-color: var(--white);
+    color: var(--primary-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 160px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.user-dropdown.show {
+    display: block;
+}
+
+/* Override .navbar-right a styles for the dropdown links */
+.navbar-right .user-dropdown a {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    color: var(--off-black);
+    text-decoration: none;
+    font-weight: normal;
+    background-color: transparent;
+    border-radius: 0;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.navbar-right .user-dropdown a:hover {
+    background-color: var(--off-white);
+    color: var(--primary-green);
+}

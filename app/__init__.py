@@ -18,6 +18,7 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 login = LoginManager()
 login.login_view = "auth.login"
+login.login_message = ""
 
 
 def create_app(config_class=Config):

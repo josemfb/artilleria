@@ -10,4 +10,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // User Menu Toggle
+    const userMenuBtn = document.querySelector('.user-menu-toggle');
+    const userDropdown = document.querySelector('.user-dropdown');
+
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!userMenuBtn.contains(e.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+    }
 });

@@ -1,7 +1,10 @@
+import os
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db
+from app.utils import validate_and_format_run
 
 
 class Usuario(UserMixin, db.Model):
@@ -26,6 +29,22 @@ class Usuario(UserMixin, db.Model):
         cascade="all, delete-orphan",
         foreign_keys="HojaServicio.user_id",
     )
+
+    @property
+    def picture(self):
+        default_img = "profile_photos/default.svg"
+        if not self.run:
+            return default_img
+
+        try:
+            run_formatted = validate_and_format_run(self.run)
+            filename = f"{run_formatted}.jpg"
+            file_path = os.path.join(current_app.static_folder, "profile_photos", filename)
+            if os.path.exists(file_path):
+                return f"profile_photos/{filename}"
+        except Exception:
+            pass
+        return default_img
 
     def set_password(self, password):
         self.pass_hash = generate_password_hash(password)

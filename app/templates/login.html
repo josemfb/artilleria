@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="login-container">
+<style>
+    .alert {
+        max-width: 400px;
+        margin: 1rem auto;
+    }
+</style>
+<div class="login-container" style="max-width: 400px; margin: 4rem auto;">
     <h1>Iniciar Sesión</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}

@@ -1,7 +1,7 @@
 import re
 
 
-def validate_and_format_run(run: str) -> str:
+def validate_and_format_run(run: str, points: bool = False) -> str:
     """
     Valida un RUN chileno y lo devuelve en el formato XX.XXX.XXX-X
 
@@ -11,6 +11,7 @@ def validate_and_format_run(run: str) -> str:
     3. Le da el formato correcto
 
     :param run: El RUN a revisar (ej.: '12345678k', '12.345.678-K').
+    :param no_points: Devuelve sin puntos (ej.: 12345678-K).
     :return: El RUN formateado (ej.: '12.345.678-K').
     :raises ValueError: Si la validación del RUN falla.
     """
@@ -45,5 +46,7 @@ def validate_and_format_run(run: str) -> str:
             f"Se esperaba {dv_esperado}, pero se recibió {dv}"
         )
 
-    run_formateado = f"{int(cuerpo):,}".replace(",", ".")
-    return f"{run_formateado}-{dv}"
+    if points:
+        run_formateado = f"{int(cuerpo):,}".replace(",", ".")
+        return f"{run_formateado}-{dv}"
+    return f"{cuerpo}-{dv}"

@@ -16,10 +16,15 @@
         </div>
         <div class="navbar-right">
             {% if current_user.is_authenticated %}
-                <span style="margin-right: 15px;">{{ current_user.nombre }} {{ current_user.apellido1 }} {{ current_user.apellido2 }}</span>
-                <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
-            {% else %}
-                <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+                <div class="user-menu-container">
+                    <button class="user-menu-toggle">
+                        <span>{{ current_user.nombre }} {{ current_user.apellido1 }}</span>
+                        <img src="{{ url_for('static', filename=current_user.picture) }}" class="user-avatar" alt="Perfil">
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </nav>
