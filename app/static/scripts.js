@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.accordion-header').forEach(button => {
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+    accordionHeaders.forEach(button => {
         button.addEventListener('click', () => {
+            accordionHeaders.forEach(otherButton => {
+                if (otherButton !== button) {
+                    otherButton.classList.remove('active');
+                    otherButton.nextElementSibling.style.maxHeight = null;
+                }
+            });
             button.classList.toggle('active');
             const content = button.nextElementSibling;
             if (button.classList.contains('active')) {
@@ -27,4 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Sidebar Toggle for Mobile
+    const toggle = document.getElementById('navbar-brand-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (toggle && sidebar) {
+        toggle.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('show');
+            }
+        });
+    }
+
+     // Disable default action for placeholder links in sidebar
+     document.querySelectorAll('.sidebar a[href="#"]').forEach(link => {
+         link.addEventListener('click', (e) => e.preventDefault());
+     });
 });

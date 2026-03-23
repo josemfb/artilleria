@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quintanet - Quinta Compañía</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200,1" rel="stylesheet">
   </head>
   <body>
     <!-- Top Navbar -->
     <nav class="navbar">
-        <div class="navbar-brand">
+        <div class="navbar-brand" id="navbar-brand-toggle">
             <!-- Logo Icon -->
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+            <span class="material-symbols-outlined">shield</span>
             <span>Quintanet</span>
         </div>
         <div class="navbar-right">
@@ -22,6 +23,7 @@
                         <img src="{{ url_for('static', filename=current_user.picture) }}" class="user-avatar" alt="Perfil">
                     </button>
                     <div class="user-dropdown">
+                        <div class="user-name-mobile">{{ current_user.nombre }} {{ current_user.apellido1 }}</div>
                         <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
                     </div>
                 </div>
@@ -35,12 +37,12 @@
         <aside class="sidebar">
             <div class="accordion-item">
                 <a href="{{ url_for('main.index') }}" class="sidebar-link">
-                    <span>Inicio</span>
+                    <span class="material-symbols-outlined">home</span><span>Inicio</span>
                 </a>
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Perfil</span>
+                    <span class="material-symbols-outlined">person</span><span>Perfil</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -53,7 +55,7 @@
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Voluntarios</span>
+                    <span class="material-symbols-outlined">group</span><span>Voluntarios</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -65,12 +67,12 @@
             </div>
             <div class="accordion-item">
                 <a href="#" class="sidebar-link">
-                    <span>Actos</span>
+                    <span class="material-symbols-outlined">calendar_today</span><span>Actos</span>
                 </a>
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Guardia Nocturna</span>
+                    <span class="material-symbols-outlined">hotel</span><span>Guardia Nocturna</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -82,7 +84,7 @@
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Libro de Oficiales</span>
+                    <span class="material-symbols-outlined">book_2</span><span>Libro de Oficiales</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -92,12 +94,12 @@
             </div>
             <div class="accordion-item">
                 <a href="#" class="sidebar-link">
-                    <span>Licencias</span>
+                    <span class="material-symbols-outlined">event_busy</span><span>Licencias</span>
                 </a>
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Tesorería</span>
+                    <span class="material-symbols-outlined">local_atm</span><span>Tesorería</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -111,7 +113,7 @@
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Cuartel</span>
+                    <span class="material-symbols-outlined">garage_home</span><span>Cuartel</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -121,7 +123,7 @@
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Material mayor</span>
+                    <span class="material-symbols-outlined">fire_truck</span><span>Material mayor</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -131,7 +133,7 @@
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Actas</span>
+                    <span class="material-symbols-outlined">history_edu</span><span>Actas</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
@@ -143,7 +145,7 @@
             </div>
             <div class="accordion-item">
                 <button class="accordion-header">
-                    <span>Recursos</span>
+                    <span class="material-symbols-outlined">folder_open</span><span>Recursos</span>
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
