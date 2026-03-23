@@ -11,7 +11,7 @@ class Base(DeclarativeBase):
     """
     pass
 
-# Initialize extensions
+# Inicializar extensiones
 db = SQLAlchemy(model_class=Base)
 
 
@@ -19,12 +19,16 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Initialize Flask extensions
+    # Inicializar extensiones de Flask
     db.init_app(app)
 
-    # Register Blueprints
+    # Registrar Blueprints
     from .routes.main import main_bp
 
     app.register_blueprint(main_bp)
+
+    # Registrar comandos CLI
+    from .cli import create_admin
+    app.cli.add_command(create_admin)
 
     return app

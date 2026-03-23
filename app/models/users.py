@@ -1,3 +1,4 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 
 
@@ -18,6 +19,12 @@ class Usuario(db.Model):
     profile = db.relationship(
         "HojaServicio", backref="user", uselist=False, cascade="all, delete-orphan"
     )
+
+    def set_password(self, password):
+        self.pass_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.pass_hash, password)
 
     def __repr__(self):
         return f"<User {self.nombre} {self.apellido1} {self.apellido2}>"
