@@ -3,23 +3,70 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Artillería - Quinta Compañía</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        .alert { padding: 10px; background-color: #f0f0f0; margin-bottom: 10px; border: 1px solid #ccc; }
-    </style>
+    <title>Quintanet - Quinta Compañía</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <nav>
-        <a href="{{ url_for('main.index') }}">Inicio</a> | 
-        <a href="{{ url_for('main.add_user') }}">Agregar Voluntario</a>
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <!-- Logo Icon -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+            <span>Quintanet</span>
+        </div>
+        <div class="navbar-right">
+            <a href="#">Cerrar Sesión</a>
+        </div>
     </nav>
-    <hr>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
-      {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
+
+    <div class="layout-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>General</span>
+                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-content">
+                    <a href="{{ url_for('main.index') }}">Inicio</a>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>Personal</span>
+                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-content">
+                    <a href="{{ url_for('main.add_user') }}">Voluntarios</a>
+                    <a href="#">Asistencia</a>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-header">
+                    <span>Operaciones</span>
+                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="accordion-content">
+                    <a href="#">Inventario</a>
+                    <a href="#">Guardia</a>
+                    <a href="#">Estadísticas</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="main-content">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
   </body>
 </html>
