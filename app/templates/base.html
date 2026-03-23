@@ -15,12 +15,18 @@
             <span>Quintanet</span>
         </div>
         <div class="navbar-right">
-            <a href="#">Cerrar Sesión</a>
+            {% if current_user.is_authenticated %}
+                <span style="margin-right: 15px;">{{ current_user.nombre }} {{ current_user.apellido1 }} {{ current_user.apellido2 }}</span>
+                <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+            {% endif %}
         </div>
     </nav>
 
     <div class="layout-container">
         <!-- Left Sidebar -->
+        {% if current_user.is_authenticated %}
         <aside class="sidebar">
             <div class="accordion-item">
                 <button class="accordion-header">
@@ -53,6 +59,7 @@
                 </div>
             </div>
         </aside>
+        {% endif %}
 
         <!-- Content Area -->
         <main class="main-content">

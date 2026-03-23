@@ -135,3 +135,9 @@ body {
     border-radius: 4px;
     margin-bottom: 20px;
 }
+
+.login-container {
+    max-width: 400px;
+    margin: 40px auto;
+    text-align: center;
+}

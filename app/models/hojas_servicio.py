@@ -84,9 +84,9 @@ class HojaServicio(db.Model):
 
     # Relaciones uno-a-muchos con las tablas auxiliares
     # TODO: app/models/guardia.py
-    noches_guardia = db.relationship(
-        "NocheGuardia", back_populates="hoja", lazy=True, cascade="all, delete-orphan"
-    )
+    # noches_guardia = db.relationship(
+    #     "NocheGuardia", back_populates="hoja", lazy=True, cascade="all, delete-orphan"
+    # )
     altas_anteriores = db.relationship(
         "AltaAnterior", back_populates="hoja", lazy=True, cascade="all, delete-orphan"
     )
@@ -212,9 +212,7 @@ class Operador(db.Model):
 
     fecha_autorizacion = db.Column(db.Date)
     maquina = db.Column(db.String(64))  # TODO: relacionar con tabla de máquinas
-    nivel = db.Column(
-        db.String(20)
-    )
+    nivel = db.Column(db.String(20))
     # TODO: Niveles fijos?
     # TODO: (Maquinista, operador N1, Operador N2, Operador N3, Conductor)
     # TODO:¿Se es máquinista de la cía o de una máquina?

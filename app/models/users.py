@@ -1,9 +1,10 @@
+from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db
 
 
-class Usuario(db.Model):
+class Usuario(UserMixin, db.Model):
     """
     Clase para los usuarios de Quintanet.
     Incluye datos básicos, y referencia a una hoja de servicios completa.
@@ -19,7 +20,11 @@ class Usuario(db.Model):
     pass_hash = db.Column(db.String(256))
 
     profile = db.relationship(
-        "HojaServicio", backref="user", uselist=False, cascade="all, delete-orphan"
+        "HojaServicio",
+        backref="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+        foreign_keys="HojaServicio.user_id",
     )
 
     def set_password(self, password):

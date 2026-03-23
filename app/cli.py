@@ -14,21 +14,15 @@ from app.models import Usuario
     confirmation_prompt=True,
     help="Contraseña.",
 )
-@click.option(
-    "--name", prompt=True, hide_input=True, confirmation_prompt=True, help="Nombre."
-)
+@click.option("--nombre", prompt=True, help="Nombre.")
 @click.option(
     "--apellido1",
     prompt=True,
-    hide_input=True,
-    confirmation_prompt=True,
     help="Primer apellido.",
 )
 @click.option(
     "--apellido2",
     prompt=True,
-    hide_input=True,
-    confirmation_prompt=True,
     help="Segundo apellido.",
 )
 @with_appcontext
@@ -48,3 +42,11 @@ def create_admin(username, password, nombre, apellido1, apellido2):
     db.session.commit()
 
     click.echo(f"Usuario {username} creado.")
+
+
+@click.command("init-db")
+@with_appcontext
+def init_db():
+    """Crear las tablas de la base de datos."""
+    db.create_all()
+    click.echo("Base de datos inicializada.")
