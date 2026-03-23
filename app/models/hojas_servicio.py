@@ -1,13 +1,46 @@
 import calendar
 from datetime import date, timedelta
-from app import db
 
+from app import db
 
 MOTIVOS_BAJA = ("Falleció", "Renunció", "Separado", "Expulsado")
 CATEGORIAS = ("Voluntario activo", "Voluntario honorario", "Voluntario 3.ª Valparaíso")
-CARGOS = ("Director", "Capitán", "Teniente 1.º", "Teniente 2.º", "Teniente 3.º", "Secretario", "Tesorero", "Intendente", "Maquinista", "Ayudante", "Consejero de Disciplina", "Consejero de Disciplina Suplente", "Cirujano", "Superintendente", "Vicesuperintendente", "Comandante", "2.º Comandante", "3.º Comandante", "4.º Comandante", "Secretario General", "Tesorero General", "Intendente General", "Inspector de Administración", "Ayudante de Administración", "Inspector de Comandancia", "Ayudante de Comandancia")
-COMPETENCIAS = ("Premio Dávila", "Premio Matte", "Premio M. Humbser", "Premio J.M. Besoaín")
+CARGOS = (
+    "Director",
+    "Capitán",
+    "Teniente 1.º",
+    "Teniente 2.º",
+    "Teniente 3.º",
+    "Secretario",
+    "Tesorero",
+    "Intendente",
+    "Maquinista",
+    "Ayudante",
+    "Consejero de Disciplina",
+    "Consejero de Disciplina Suplente",
+    "Cirujano",
+    "Superintendente",
+    "Vicesuperintendente",
+    "Comandante",
+    "2.º Comandante",
+    "3.º Comandante",
+    "4.º Comandante",
+    "Secretario General",
+    "Tesorero General",
+    "Intendente General",
+    "Inspector de Administración",
+    "Ayudante de Administración",
+    "Inspector de Comandancia",
+    "Ayudante de Comandancia",
+)
+COMPETENCIAS = (
+    "Premio Dávila",
+    "Premio Matte",
+    "Premio M. Humbser",
+    "Premio J.M. Besoaín",
+)
 NIVELES_ACADEMICOS = ("Bombero inicial", "Bombero operativo", "Bombero profesional")
+
 
 class HojaServicio(db.Model):
     __tablename__ = "hojas_servicio"
@@ -21,10 +54,7 @@ class HojaServicio(db.Model):
     num_registro_quinta = db.Column(db.Integer)
     fecha_baja = db.Column(db.Date, nullable=True)
     motivo_baja = db.Column(
-        db.Enum(
-            *MOTIVOS_BAJA,
-            name="motivo_baja_enum"
-        ),
+        db.Enum(*MOTIVOS_BAJA, name="motivo_baja_enum"),
         nullable=True,
     )
     categoria = db.Column(
@@ -41,8 +71,12 @@ class HojaServicio(db.Model):
     telefono = db.Column(db.String(20))
 
     # Voluntarios patrocinantes
-    patrocinante1_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
-    patrocinante2_id = db.Column(db.Integer, db.ForeignKey("usuarios.id"), nullable=True)
+    patrocinante1_id = db.Column(
+        db.Integer, db.ForeignKey("usuarios.id"), nullable=True
+    )
+    patrocinante2_id = db.Column(
+        db.Integer, db.ForeignKey("usuarios.id"), nullable=True
+    )
 
     # Relaciones para acceder a los nombres de los patrocinantes
     patrocinante1 = db.relationship("Usuario", foreign_keys=[patrocinante1_id])
@@ -60,7 +94,10 @@ class HojaServicio(db.Model):
         "Asistencia", back_populates="hoja", lazy=True, cascade="all, delete-orphan"
     )
     premios = db.relationship(
-        "PremioAsistencia", back_populates="hoja", lazy=True, cascade="all, delete-orphan"
+        "PremioAsistencia",
+        back_populates="hoja",
+        lazy=True,
+        cascade="all, delete-orphan",
     )
     cargos = db.relationship(
         "Cargo", back_populates="hoja", lazy=True, cascade="all, delete-orphan"
@@ -83,9 +120,7 @@ class HojaServicio(db.Model):
 
     @property
     def antiguedad(self):
-        sum_dias_anteriores = sum(
-            (a.total_dias or 0) for a in self.altas_anteriores
-        )
+        sum_dias_anteriores = sum((a.total_dias or 0) for a in self.altas_anteriores)
 
         fecha_alta_simulada = self.fecha_alta - timedelta(days=sum_dias_anteriores)
 
@@ -120,10 +155,7 @@ class AltaAnterior(db.Model):
     registro_quinta = db.Column(db.Integer)
     fecha_baja = db.Column(db.Date)
     motivo_baja = db.Column(
-        db.Enum(
-            *MOTIVOS_BAJA,
-            name="motivo_baja_enum"
-        ),
+        db.Enum(*MOTIVOS_BAJA, name="motivo_baja_enum"),
         nullable=True,
     )
 
@@ -166,10 +198,7 @@ class Cargo(db.Model):
     hoja_id = db.Column(db.Integer, db.ForeignKey("hojas_servicio.id"))
     hoja = db.relationship("HojaServicio", back_populates="cargos")
 
-    nombre_cargo = db.Enum(
-            *CARGOS,
-            name="cargo_enum"
-        )
+    nombre_cargo = db.Enum(*CARGOS, name="cargo_enum")
     fecha_inicio = db.Column(db.Date)
     fecha_termino = db.Column(db.Date, nullable=True)
 
@@ -183,7 +212,12 @@ class Operador(db.Model):
 
     fecha_autorizacion = db.Column(db.Date)
     maquina = db.Column(db.String(64))  # TODO: relacionar con tabla de máquinas
-    nivel = db.Column(db.String(20))  # TODO: Niveles fijos? (Maquinista, operador N1, Operador N2, Operador N3, Conductor) ¿Se es máquinista de la cía o de una máquina?
+    nivel = db.Column(
+        db.String(20)
+    )
+    # TODO: Niveles fijos?
+    # TODO: (Maquinista, operador N1, Operador N2, Operador N3, Conductor)
+    # TODO:¿Se es máquinista de la cía o de una máquina?
     comentario = db.Column(db.Text)
 
 
@@ -226,6 +260,7 @@ class OtraAnotacion(db.Model):
     """
     Como Premio La Llave o Cuadro de Honor
     """
+
     __tablename__ = "otras_anotaciones"
 
     id = db.Column(db.Integer, primary_key=True)

@@ -1,13 +1,13 @@
-from .users import Usuario
 from .hojas_servicio import (
-    HojaServicio,
     AltaAnterior,
     Asistencia,
-    PremioAsistencia,
     Cargo,
-    Operador,
     Competencia,
     Curso,
+    HojaServicio,
     NivelAcademico,
+    Operador,
     OtraAnotacion,
+    PremioAsistencia,
 )
+from .users import Usuario

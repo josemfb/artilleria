@@ -9,7 +9,9 @@ class Base(DeclarativeBase):
     """
     Clase base declarativa, para evitar problemas con MyPy.
     """
+
     pass
+
 
 # Inicializar extensiones
 db = SQLAlchemy(model_class=Base)
@@ -29,6 +31,7 @@ def create_app(config_class=Config):
 
     # Registrar comandos CLI
     from .cli import create_admin
+
     app.cli.add_command(create_admin)
 
     return app

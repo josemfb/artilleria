@@ -1,4 +1,5 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from app import db
 
 
@@ -7,8 +8,9 @@ class Usuario(db.Model):
     Clase para los usuarios de Quintanet.
     Incluye datos básicos, y referencia a una hoja de servicios completa.
     """
+
     __tablename__ = "usuarios"
-    
+
     id = db.Column(db.Integer, primary_key=True)
     run = db.Column(db.String(64), index=True, unique=True)
     nombre = db.Column(db.String(64))
