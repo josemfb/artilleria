@@ -26,6 +26,10 @@ def login():
         if not next_page or urlsplit(next_page).netloc != "":
             next_page = url_for("main.index")
         return redirect(next_page)
+
+    if form.username.errors:
+        flash("RUN inválido")
+
     return render_template("login.html", title="Ingresar", form=form)
 
 

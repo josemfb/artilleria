@@ -1,8 +1,11 @@
+import os
 import click
+from flask import current_app
 from flask.cli import with_appcontext
 
 from app import db
 from app.models import Usuario
+from app.utils import validate_and_format_run
 
 
 @click.command("create-admin")
@@ -29,8 +32,14 @@ from app.models import Usuario
 def create_admin(username, password, nombre, apellido1, apellido2):
     """Create an external admin user."""
 
+    try:
+        username = validate_and_format_run(username)
+    except ValueError as e:
+        click.echo(f"Error: {e}")
+        return
+
     if Usuario.query.filter_by(run=username).first():
-        click.echo(f"User {username} already exists.")
+        click.echo(f"Usuario {username} ya existe.")
         return
 
     # Create User without HojaServicio (Not a volunteer)
@@ -48,5 +57,11 @@ def create_admin(username, password, nombre, apellido1, apellido2):
 @with_appcontext
 def init_db():
     """Crear las tablas de la base de datos."""
+    db_url = current_app.config.get("SQLALCHEMY_DATABASE_URI")
+    if db_url and db_url.startswith("sqlite:///"):
+        path = db_url.replace("sqlite:///", "", 1)
+        directory = os.path.dirname(path)
+        if directory and not os.path.exists(directory):
+            os.makedirs(directory)
     db.create_all()
     click.echo("Base de datos inicializada.")
