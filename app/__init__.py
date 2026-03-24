@@ -38,9 +38,11 @@ def create_app(config_class=Config):
     # Registrar Blueprints
     from .routes.auth import auth_bp
     from .routes.main import main_bp
+    from .routes.settings import settings_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(settings_bp)
 
     # Registrar comandos CLI
     from .cli import create_admin, init_db
