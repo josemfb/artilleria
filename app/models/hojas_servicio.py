@@ -5,7 +5,8 @@ from app import db
 
 MOTIVOS_BAJA = ("Falleció", "Renunció", "Separado", "Expulsado")
 CATEGORIAS = ("Voluntario activo", "Voluntario honorario", "Voluntario 3.ª Valparaíso")
-CARGOS = (
+
+CARGOS_INICIAL = (
     "Director",
     "Capitán",
     "Teniente 1.º",
@@ -28,11 +29,13 @@ CARGOS = (
     "Secretario General",
     "Tesorero General",
     "Intendente General",
+    "Director Honorario",
     "Inspector de Administración",
     "Ayudante de Administración",
     "Inspector de Comandancia",
     "Ayudante de Comandancia",
 )
+
 COMPETENCIAS = (
     "Premio Dávila",
     "Premio Matte",
@@ -191,6 +194,17 @@ class PremioAsistencia(db.Model):
     asistencias_sobrantes = db.Column(db.Integer)
 
 
+class TipoCargo(db.Model):
+    __tablename__ = "tipos_cargo"
+
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(64), unique=True, nullable=False)
+    orden = db.Column(db.Integer, default=0)
+    
+    def __repr__(self):
+        return self.nombre
+
+
 class Cargo(db.Model):
     __tablename__ = "cargos"
 
@@ -198,7 +212,14 @@ class Cargo(db.Model):
     hoja_id = db.Column(db.Integer, db.ForeignKey("hojas_servicio.id"))
     hoja = db.relationship("HojaServicio", back_populates="cargos")
 
-    nombre_cargo = db.Enum(*CARGOS, name="cargo_enum")
+    # TODO:
+    #  Referencia al nombre del cargo (String) para flexibilidad histórica
+    #  Opcional: Podríamos vincularlo a TipoCargo con FK,
+    #  pero el requerimiento es modificar los cargos posibles.
+    #  Si borramos un tipo de cargo, ¿queremos borrar el historial? Probablemente no.
+    #  Por lo tanto, guardaremos el nombre como String, pero la UI lo sacará de TipoCargo.
+    nombre_cargo = db.Column(db.String(64))
+
     fecha_inicio = db.Column(db.Date)
     fecha_termino = db.Column(db.Date, nullable=True)
 
@@ -255,10 +276,7 @@ class NivelAcademico(db.Model):
 
 
 class OtraAnotacion(db.Model):
-    """
-    Como Premio La Llave o Cuadro de Honor
-    """
-
+    # Como Premio La Llave o Cuadro de Honor
     __tablename__ = "otras_anotaciones"
 
     id = db.Column(db.Integer, primary_key=True)

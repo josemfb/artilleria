@@ -9,5 +9,6 @@ from .hojas_servicio import (
     Operador,
     OtraAnotacion,
     PremioAsistencia,
+    TipoCargo,
 )
 from .users import Usuario

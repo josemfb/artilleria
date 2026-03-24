@@ -6,6 +6,7 @@ from flask.cli import with_appcontext
 
 from app import db
 from app.models import Usuario
+from app.models.hojas_servicio import CARGOS_INICIAL, TipoCargo
 from app.utils import validate_and_format_run
 
 
@@ -65,4 +66,12 @@ def init_db():
         if directory and not os.path.exists(directory):
             os.makedirs(directory)
     db.create_all()
+
+    # Pre-llenar TiposCargo
+    if not TipoCargo.query.first():
+        for i, cargo in enumerate(CARGOS_INICIAL):
+            db.session.add(TipoCargo(nombre=cargo, orden=i))
+        db.session.commit()
+        click.echo("Cargos iniciales creados.")
+
     click.echo("Base de datos inicializada.")

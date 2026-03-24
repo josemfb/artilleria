@@ -10,4 +10,4 @@ En desarrollo.
 - En cada archivo:
     - `isort .`
     - `black .`
-    - `flake8 --extend-exclude '.venv', '.idea', '.plan' --max-line-length 100 .`
+    - `flake8 --extend-exclude '.venv, .idea, .plan' --max-line-length 100 .`
