@@ -74,7 +74,7 @@ body {
     background: none;
     border: none;
     text-align: left;
-    padding: 15px 20px;
+    padding: 10px 20px;
     font-size: 1rem;
     color: var(--off-black);
     cursor: pointer;
@@ -120,7 +120,7 @@ body {
 
 .accordion-content a {
     display: block;
-    padding: 10px 20px 10px 35px;
+    padding: 8px 20px 8px 35px;
     text-decoration: none;
     color: #495057;
     font-size: 0.9rem;
@@ -135,7 +135,8 @@ body {
 }
 
 /* Gray out disabled/placeholder links in sidebar */
-.sidebar a[href="#"] {
+.sidebar a[href="#"],
+.accordion-header.disabled {
     color: #adb5bd;
     pointer-events: none;
     cursor: default;
@@ -471,6 +472,19 @@ body {
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     box-sizing: border-box;
     font-family: inherit;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
 }
 
 .form-control:focus {

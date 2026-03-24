@@ -19,6 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Disable accordion headers if all content links are placeholders
+    document.querySelectorAll('.accordion-item').forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        const content = item.querySelector('.accordion-content');
+        
+        if (header && content) {
+            const links = Array.from(content.querySelectorAll('a'));
+            const allPlaceholders = links.every(link => link.getAttribute('href') === '#');
+            if (links.length > 0 && allPlaceholders) {
+                header.classList.add('disabled');
+            }
+        }
+    });
+
     // User Menu Toggle
     const userMenuBtn = document.querySelector('.user-menu-toggle');
     const userDropdown = document.querySelector('.user-dropdown');
