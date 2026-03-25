@@ -57,7 +57,7 @@
                             {% if user.profile.fecha_alta %}
                                 {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
                                 <small class="text-muted">
-                                    ({{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses)
+                                    ({{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días)
                                 </small>
                             {% else %}
                                 <span class="text-muted">-</span>
@@ -91,7 +91,7 @@
                         <label class="form-label">Email</label>
                         <div>
                             {% if user.profile.email %}
-                                <a href="mailto:{{ user.profile.email }}">{{ user.profile.email }}</a>
+                                {{ user.profile.email }}
                             {% else %}
                                 <span class="text-muted">-</span>
                             {% endif %}
