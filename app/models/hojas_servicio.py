@@ -122,6 +122,15 @@ class HojaServicio(db.Model):
     )
 
     @property
+    def cargo_actual(self):
+        cargos = [
+            c.nombre_cargo
+            for c in self.cargos
+            if c.fecha_termino is None and c.nombre_cargo
+        ]
+        return ", ".join(cargos) if cargos else None
+
+    @property
     def antiguedad(self):
         sum_dias_anteriores = sum((a.total_dias or 0) for a in self.altas_anteriores)
 
@@ -200,7 +209,7 @@ class TipoCargo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(64), unique=True, nullable=False)
     orden = db.Column(db.Integer, default=0)
-    
+
     def __repr__(self):
         return self.nombre
 

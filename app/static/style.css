@@ -543,3 +543,14 @@ body {
 .gap-2 {
     gap: 8px;
 }
+
+.text-decoration-none {
+    text-decoration: none;
+    color: inherit;
+}
+
+.sort-icon {
+    display: inline-block;
+    width: 1.2em;
+    text-align: center;
+}

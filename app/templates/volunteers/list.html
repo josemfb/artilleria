@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Voluntarios</h2>
+    <p class="text-muted">Nómina de voluntarios de la Quinta Compañía.</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 60px;"></th>
+                    <th>
+                        <a href="{{ url_for('volunteers.index', sort_by='apellido', order='desc' if current_sort == 'apellido' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                            Nombre
+                            <span class="sort-icon" {% if current_sort != 'apellido' %}style="visibility: hidden"{% endif %}>
+                                {{ '↓' if current_sort == 'apellido' and current_order == 'asc' else '↑' }}
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('volunteers.index', sort_by='categoria', order='desc' if current_sort == 'categoria' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                            Categoría
+                            <span class="sort-icon" {% if current_sort != 'categoria' %}style="visibility: hidden"{% endif %}>
+                                {{ '↓' if current_sort == 'categoria' and current_order == 'asc' else '↑' }}
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('volunteers.index', sort_by='cargo', order='desc' if current_sort == 'cargo' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                            Cargo
+                            <span class="sort-icon" {% if current_sort != 'cargo' %}style="visibility: hidden"{% endif %}>
+                                {{ '↓' if current_sort == 'cargo' and current_order == 'asc' else '↑' }}
+                            </span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('volunteers.index', sort_by='antiguedad', order='desc' if current_sort == 'antiguedad' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                            Antigüedad
+                            <span class="sort-icon" {% if current_sort != 'antiguedad' %}style="visibility: hidden"{% endif %}>
+                                {{ '↓' if current_sort == 'antiguedad' and current_order == 'asc' else '↑' }}
+                            </span>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td class="text-center pl-3">
+                         <img src="{{ url_for('static', filename=user.picture) }}" class="user-avatar" style="width: 36px; height: 36px; border-radius: 12px;" alt="{{ user.nombre }}">
+                    </td>
+                    <td class="font-weight-500">
+                        {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}
+                    </td>
+                    <td>
+                        {% if user.profile and user.profile.categoria %}
+                            {{ user.profile.categoria }}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.profile and user.profile.cargo_actual %}
+                            {{ user.profile.cargo_actual }}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.profile and user.profile.fecha_alta %}
+                            {% set a = user.profile.antiguedad %}
+                            {{ a[0] }} años
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center p-4 text-muted">
+                        No se encontraron voluntarios registrados.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
