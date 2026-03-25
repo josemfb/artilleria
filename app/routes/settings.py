@@ -38,13 +38,13 @@ def cargos():
                 db.session.add(new_cargo)
                 db.session.commit()
                 flash("Cargo agregado.", "success")
-        
+
         return redirect(url_for("settings.cargos"))
 
     cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
     if request.headers.get("HX-Request"):
         return render_template(
-             "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+            "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
         )
     return render_template(
         "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
@@ -59,7 +59,7 @@ def delete_cargo(id):
         db.session.delete(cargo)
         db.session.commit()
         flash("Cargo eliminado.", "success")
-    
+
     if request.headers.get("HX-Request"):
         cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
         return render_template(
@@ -101,7 +101,7 @@ def move_cargo(id, direction):
         db.session.add(cargo)
         db.session.add(target_cargo)
         db.session.commit()
-    
+
     if request.headers.get("HX-Request"):
         cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
         return render_template(
@@ -122,7 +122,7 @@ def edit_cargo(id):
         cargo.categoria = nueva_categoria
         db.session.commit()
         flash("Cargo actualizado.", "success")
-    
+
     if request.headers.get("HX-Request"):
         cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
         return render_template(
@@ -166,12 +166,14 @@ def permissions():
 
         db.session.commit()
         flash("Permisos actualizados correctamente.", "success")
-        
+
         # When using HTMX, we just want to re-render the page content with updated state
         if request.headers.get("HX-Request"):
             active_perms = [
                 p.permission
-                for p in RolePermission.query.filter_by(tipo_cargo_id=selected_cargo_id).all()
+                for p in RolePermission.query.filter_by(
+                    tipo_cargo_id=selected_cargo_id
+                ).all()
             ]
             return render_template(
                 "settings/permissions.html",
@@ -188,7 +190,7 @@ def permissions():
         p.permission
         for p in RolePermission.query.filter_by(tipo_cargo_id=selected_cargo_id).all()
     ]
-    
+
     if request.headers.get("HX-Request"):
         return render_template(
             "settings/permissions.html",

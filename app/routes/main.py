@@ -42,7 +42,7 @@ def add_user():
         db.session.add(profile)
         db.session.commit()
         flash(f"Voluntario {user.nombre} {user.apellido1} agregado correctamente.")
-        
+
         if request.headers.get("HX-Request"):
             return redirect(url_for("volunteers.index"))
         return redirect(url_for("volunteers.index"))

@@ -29,7 +29,7 @@ def login():
         next_page = request.args.get("next")
         if not next_page or urlsplit(next_page).netloc != "":
             next_page = url_for("main.index")
-        
+
         return redirect(next_page)
 
     if form.username.errors:

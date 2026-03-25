@@ -39,7 +39,7 @@ def index():
         return (user.apellido1 or "", user.apellido2 or "", user.nombre or "")
 
     users.sort(key=get_sort_key, reverse=reverse)
-    
+
     if request.headers.get("HX-Request"):
         return render_template(
             "volunteers/list.html",
@@ -65,7 +65,7 @@ def details(user_id):
         return redirect(url_for("volunteers.index"))
 
     show_full = current_user.has_permission("volunteers.view_details")
-    
+
     if request.headers.get("HX-Request"):
         return render_template(
             "volunteers/details.html", user=user, show_full=show_full
@@ -107,9 +107,9 @@ def edit_volunteer(user_id):
 
         db.session.commit()
         flash("Información actualizada correctamente.", "success")
-        
+
         if request.headers.get("HX-Request"):
-             return render_template("volunteers/details.html", user=user, show_full=True)
+            return render_template("volunteers/details.html", user=user, show_full=True)
 
         return redirect(url_for("volunteers.details", user_id=user.id))
 
@@ -142,7 +142,7 @@ def add_cargo(user_id):
     if not current_user.has_permission("volunteers.add_volunteer"):
         flash("No tienes permiso para realizar esta acción.")
         return redirect(url_for("volunteers.details", user_id=user_id))
-    
+
     # Needs to find user first
     user = db.session.get(Usuario, user_id)
     if not user:
@@ -160,15 +160,15 @@ def add_cargo(user_id):
         db.session.add(new_cargo)
         db.session.commit()
         flash("Cargo agregado correctamente.", "success")
-        
+
         if request.headers.get("HX-Request"):
-             # Re-render edit page content to show new cargo
-             edit_form = EditVolunteerForm()
-             # We need to re-populate the edit form data so it doesn't show empty fields
-             edit_form.nombre.data = user.nombre
-             edit_form.apellido1.data = user.apellido1
-             edit_form.apellido2.data = user.apellido2
-             if user.profile:
+            # Re-render edit page content to show new cargo
+            edit_form = EditVolunteerForm()
+            # We need to re-populate the edit form data so it doesn't show empty fields
+            edit_form.nombre.data = user.nombre
+            edit_form.apellido1.data = user.apellido1
+            edit_form.apellido2.data = user.apellido2
+            if user.profile:
                 edit_form.fecha_nacimiento.data = user.profile.fecha_nacimiento
                 edit_form.ocupacion.data = user.profile.ocupacion
                 edit_form.direccion.data = user.profile.direccion
@@ -178,10 +178,10 @@ def add_cargo(user_id):
                 edit_form.categoria.data = user.profile.categoria
                 edit_form.fecha_baja.data = user.profile.fecha_baja
                 edit_form.motivo_baja.data = user.profile.motivo_baja
-             return render_template("volunteers/edit.html", form=edit_form, user=user)
+            return render_template("volunteers/edit.html", form=edit_form, user=user)
 
         return redirect(url_for("volunteers.edit_volunteer", user_id=user_id))
-    
+
     if request.headers.get("HX-Request"):
         return render_template(
             "volunteers/manage_cargo.html", form=form, title="Añadir Cargo", user=user
@@ -206,21 +206,21 @@ def edit_cargo(cargo_id):
 
     user = cargo.hoja.user
     form = CargoForm()
-    
+
     if form.validate_on_submit():
         cargo.nombre_cargo = form.nombre_cargo.data
         cargo.fecha_inicio = form.fecha_inicio.data
         cargo.fecha_termino = form.fecha_termino.data or None
         db.session.commit()
         flash("Cargo actualizado correctamente.", "success")
-        
+
         if request.headers.get("HX-Request"):
-             # Re-render edit page content
-             edit_form = EditVolunteerForm()
-             edit_form.nombre.data = user.nombre
-             edit_form.apellido1.data = user.apellido1
-             edit_form.apellido2.data = user.apellido2
-             if user.profile:
+            # Re-render edit page content
+            edit_form = EditVolunteerForm()
+            edit_form.nombre.data = user.nombre
+            edit_form.apellido1.data = user.apellido1
+            edit_form.apellido2.data = user.apellido2
+            if user.profile:
                 edit_form.fecha_nacimiento.data = user.profile.fecha_nacimiento
                 edit_form.ocupacion.data = user.profile.ocupacion
                 edit_form.direccion.data = user.profile.direccion
@@ -230,10 +230,10 @@ def edit_cargo(cargo_id):
                 edit_form.categoria.data = user.profile.categoria
                 edit_form.fecha_baja.data = user.profile.fecha_baja
                 edit_form.motivo_baja.data = user.profile.motivo_baja
-             return render_template("volunteers/edit.html", form=edit_form, user=user)
+            return render_template("volunteers/edit.html", form=edit_form, user=user)
 
         return redirect(url_for("volunteers.edit_volunteer", user_id=user.id))
-    
+
     elif request.method == "GET":
         form.nombre_cargo.data = cargo.nombre_cargo
         form.fecha_inicio.data = cargo.fecha_inicio
@@ -266,23 +266,23 @@ def delete_cargo(cargo_id):
     db.session.delete(cargo)
     db.session.commit()
     flash("Cargo eliminado correctamente.", "success")
-    
+
     if request.headers.get("HX-Request"):
-             # Re-render edit page content
-             edit_form = EditVolunteerForm()
-             edit_form.nombre.data = user.nombre
-             edit_form.apellido1.data = user.apellido1
-             edit_form.apellido2.data = user.apellido2
-             if user.profile:
-                edit_form.fecha_nacimiento.data = user.profile.fecha_nacimiento
-                edit_form.ocupacion.data = user.profile.ocupacion
-                edit_form.direccion.data = user.profile.direccion
-                edit_form.telefono.data = user.profile.telefono
-                edit_form.email.data = user.profile.email
-                edit_form.fecha_alta.data = user.profile.fecha_alta
-                edit_form.categoria.data = user.profile.categoria
-                edit_form.fecha_baja.data = user.profile.fecha_baja
-                edit_form.motivo_baja.data = user.profile.motivo_baja
-             return render_template("volunteers/edit.html", form=edit_form, user=user)
+        # Re-render edit page content
+        edit_form = EditVolunteerForm()
+        edit_form.nombre.data = user.nombre
+        edit_form.apellido1.data = user.apellido1
+        edit_form.apellido2.data = user.apellido2
+        if user.profile:
+            edit_form.fecha_nacimiento.data = user.profile.fecha_nacimiento
+            edit_form.ocupacion.data = user.profile.ocupacion
+            edit_form.direccion.data = user.profile.direccion
+            edit_form.telefono.data = user.profile.telefono
+            edit_form.email.data = user.profile.email
+            edit_form.fecha_alta.data = user.profile.fecha_alta
+            edit_form.categoria.data = user.profile.categoria
+            edit_form.fecha_baja.data = user.profile.fecha_baja
+            edit_form.motivo_baja.data = user.profile.motivo_baja
+        return render_template("volunteers/edit.html", form=edit_form, user=user)
 
     return redirect(url_for("volunteers.edit_volunteer", user_id=user_id))
