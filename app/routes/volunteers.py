@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request
-from flask_login import login_required
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 
-from app.models import Usuario
+from app import db
+from app.forms import CargoForm, EditVolunteerForm
+from app.models import Cargo, TipoCargo, Usuario
 
 volunteers_bp = Blueprint("volunteers", __name__, url_prefix="/voluntarios")
 
@@ -44,3 +46,151 @@ def index():
         current_sort=sort_by,
         current_order=order,
     )
+
+
+@volunteers_bp.route("/<int:user_id>")
+@login_required
+def details(user_id):
+    user = db.session.get(Usuario, user_id)
+    if not user:
+        flash("Voluntario no encontrado.")
+        return redirect(url_for("volunteers.index"))
+
+    show_full = current_user.has_permission("volunteers.view_details")
+    return render_template("volunteers/details.html", user=user, show_full=show_full)
+
+
+@volunteers_bp.route("/edit/<int:user_id>", methods=["GET", "POST"])
+@login_required
+def edit_volunteer(user_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.")
+        return redirect(url_for("volunteers.details", user_id=user_id))
+
+    user = db.session.get(Usuario, user_id)
+    if not user:
+        flash("Voluntario no encontrado.")
+        return redirect(url_for("volunteers.index"))
+
+    form = EditVolunteerForm()
+
+    if form.validate_on_submit():
+        # Update Usuario
+        user.nombre = form.nombre.data
+        user.apellido1 = form.apellido1.data
+        user.apellido2 = form.apellido2.data
+
+        # Update HojaServicio (user.profile is created on user creation, so it exists)
+        profile = user.profile
+        profile.fecha_nacimiento = form.fecha_nacimiento.data
+        profile.ocupacion = form.ocupacion.data
+        profile.direccion = form.direccion.data
+        profile.telefono = form.telefono.data
+        profile.email = form.email.data
+        profile.fecha_alta = form.fecha_alta.data
+        profile.categoria = form.categoria.data
+        profile.fecha_baja = form.fecha_baja.data
+        profile.motivo_baja = form.motivo_baja.data or None
+
+        db.session.commit()
+        flash("Información actualizada correctamente.")
+        return redirect(url_for("volunteers.details", user_id=user.id))
+
+    # Pre-populate form
+    if request.method == "GET":
+        form.nombre.data = user.nombre
+        form.apellido1.data = user.apellido1
+        form.apellido2.data = user.apellido2
+
+        if user.profile:
+            form.fecha_nacimiento.data = user.profile.fecha_nacimiento
+            form.ocupacion.data = user.profile.ocupacion
+            form.direccion.data = user.profile.direccion
+            form.telefono.data = user.profile.telefono
+            form.email.data = user.profile.email
+            form.fecha_alta.data = user.profile.fecha_alta
+            form.categoria.data = user.profile.categoria
+            form.fecha_baja.data = user.profile.fecha_baja
+            form.motivo_baja.data = user.profile.motivo_baja
+
+    return render_template("volunteers/edit.html", form=form, user=user)
+
+
+@volunteers_bp.route("/<int:user_id>/cargos/add", methods=["GET", "POST"])
+@login_required
+def add_cargo(user_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.")
+        return redirect(url_for("volunteers.details", user_id=user_id))
+
+    user = db.session.get(Usuario, user_id)
+    if not user or not user.profile:
+        flash("Voluntario no encontrado.")
+        return redirect(url_for("volunteers.index"))
+
+    form = CargoForm()
+    if form.validate_on_submit():
+        new_cargo = Cargo(
+            hoja_id=user.profile.id,
+            nombre_cargo=form.nombre_cargo.data,
+            fecha_inicio=form.fecha_inicio.data,
+            fecha_termino=form.fecha_termino.data or None,
+        )
+        db.session.add(new_cargo)
+        db.session.commit()
+        flash("Cargo agregado correctamente.")
+        return redirect(url_for("volunteers.edit_volunteer", user_id=user_id))
+
+    return render_template(
+        "volunteers/manage_cargo.html", form=form, title="Añadir Cargo", user=user
+    )
+
+
+@volunteers_bp.route("/cargos/edit/<int:cargo_id>", methods=["GET", "POST"])
+@login_required
+def edit_cargo(cargo_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.")
+        return redirect(url_for("volunteers.index"))
+
+    cargo = db.session.get(Cargo, cargo_id)
+    if not cargo:
+        flash("Cargo no encontrado.")
+        return redirect(url_for("volunteers.index"))
+
+    user = cargo.hoja.user
+    form = CargoForm()
+    if form.validate_on_submit():
+        cargo.nombre_cargo = form.nombre_cargo.data
+        cargo.fecha_inicio = form.fecha_inicio.data
+        cargo.fecha_termino = form.fecha_termino.data or None
+        db.session.commit()
+        flash("Cargo actualizado correctamente.")
+        return redirect(url_for("volunteers.edit_volunteer", user_id=user.id))
+    elif request.method == "GET":
+        form.nombre_cargo.data = cargo.nombre_cargo
+        form.fecha_inicio.data = cargo.fecha_inicio
+        form.fecha_termino.data = cargo.fecha_termino
+
+    return render_template(
+        "volunteers/manage_cargo.html", form=form, title="Editar Cargo", user=user
+    )
+
+
+@volunteers_bp.route("/cargos/delete/<int:cargo_id>", methods=["POST"])
+@login_required
+def delete_cargo(cargo_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.")
+        return redirect(url_for("volunteers.index"))
+
+    cargo = db.session.get(Cargo, cargo_id)
+    if not cargo:
+        flash("Cargo no encontrado.")
+        return redirect(request.referrer or url_for("volunteers.index"))
+
+    user_id = cargo.hoja.user_id
+    db.session.delete(cargo)
+    db.session.commit()
+    flash("Cargo eliminado correctamente.")
+    return redirect(url_for("volunteers.edit_volunteer", user_id=user_id))

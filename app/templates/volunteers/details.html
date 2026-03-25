@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex align-items-center gap-2">
+        <a href="{{ url_for('volunteers.index') }}" class="btn-icon" title="Volver">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h2>{{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</h2>
+            <p class="text-muted" style="margin-bottom: 0;">{{ user.run }}</p>
+        </div>
+    </div>
+    
+    {% if current_user.has_permission('volunteers.add_volunteer') %}
+    <div>
+        <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn btn-primary">Editar voluntario</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="settings-layout">
+    <!-- Sidebar: Photo & Summary -->
+    <div class="settings-sidebar">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <img src="{{ url_for('static', filename=user.picture) }}" 
+                     style="width: 150px; height: 150px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid var(--border-color);" 
+                     alt="Foto de perfil">
+                <h4 style="margin: 0 0 5px 0;">{{ user.nombre }} {{ user.apellido1 }}</h4>
+                <p class="text-muted">
+                    {% if user.profile and user.profile.categoria %}{{ user.profile.categoria }}{% else %}Sin categoría{% endif %}
+                </p>
+                {% if user.profile and user.profile.cargo_actual %}
+                <span class="badge-count" style="background-color: var(--primary-green); color: white;">
+                    {{ user.profile.cargo_actual }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="settings-main">
+        
+        <!-- 1. Basic Info (Visible to everyone) -->
+        <div class="card shadow-sm">
+            <div class="card-header">Información General</div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                    
+                    <!-- Institutional Data -->
+                    <div>
+                        <label class="form-label">Fecha de Alta</label>
+                        <div>
+                            {% if user.profile.fecha_alta %}
+                                {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
+                                <small class="text-muted">
+                                    ({{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses)
+                                </small>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Data -->
+                    <div>
+                        <label class="form-label">Fecha Nacimiento</label>
+                        <div>
+                            {% if user.profile.fecha_nacimiento %}
+                                {{ user.profile.fecha_nacimiento.strftime('%d-%m-%Y') }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Ocupación</label>
+                        <div>{{ user.profile.ocupacion or '-' }}</div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Teléfono</label>
+                        <div>{{ user.profile.telefono or '-' }}</div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Email</label>
+                        <div>
+                            {% if user.profile.email %}
+                                <a href="mailto:{{ user.profile.email }}">{{ user.profile.email }}</a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="grid-column: 1 / -1;">
+                        <label class="form-label">Dirección</label>
+                        <div>{{ user.profile.direccion or '-' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Extended Service Record (Visible only with permission) -->
+        {% if show_full %}
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">Hoja de Servicios</div>
+            
+            <!-- Tabs or simple sections could work here. Using simple headers for now -->
+            
+            <!-- Historial de Cargos -->
+            <div class="card-body">
+                <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px;">Historial de Cargos</h5>
+                {% if user.profile.cargos %}
+                <table class="table table-sm mb-3">
+                    <thead>
+                        <tr>
+                            <th>Cargo</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cargo in user.profile.cargos|sort(attribute='fecha_inicio', reverse=True) %}
+                        <tr>
+                            <td>{{ cargo.nombre_cargo }}</td>
+                            <td>{{ cargo.fecha_inicio.strftime('%d-%m-%Y') }}</td>
+                            <td>{{ cargo.fecha_termino.strftime('%d-%m-%Y') if cargo.fecha_termino else 'Presente' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No registra cargos.</p>
+                {% endif %}
+
+                <!-- Premios -->
+                <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Premios de Constancia</h5>
+                {% if user.profile.premios %}
+                <table class="table table-sm mb-3">
+                    <thead>
+                        <tr>
+                            <th>Premio (Años)</th>
+                            <th>Fecha Obtención</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for premio in user.profile.premios|sort(attribute='premio', reverse=True) %}
+                        <tr>
+                            <td>{{ premio.premio }} Años</td>
+                            <td>{{ premio.fecha_obtencion.strftime('%d-%m-%Y') if premio.fecha_obtencion else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No registra premios.</p>
+                {% endif %}
+
+                <!-- Cursos -->
+                <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Cursos y Capacitación</h5>
+                {% if user.profile.cursos %}
+                <ul style="list-style: none; padding-left: 0;">
+                    {% for curso in user.profile.cursos|sort(attribute='fecha', reverse=True) %}
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span>{{ curso.nombre_curso }}</span>
+                        <span class="text-muted">{{ curso.fecha }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No registra cursos.</p>
+                {% endif %}
+
+                 <!-- Altas Anteriores -->
+                 {% if user.profile.altas_anteriores %}
+                 <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Altas Anteriores</h5>
+                 <table class="table table-sm">
+                     <thead>
+                         <tr>
+                             <th>Fecha Alta</th>
+                             <th>Fecha Baja</th>
+                             <th>Motivo</th>
+                             <th>Días servidos</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         {% for alta in user.profile.altas_anteriores %}
+                         <tr>
+                             <td>{{ alta.fecha_alta.strftime('%d-%m-%Y') if alta.fecha_alta else '-' }}</td>
+                             <td>{{ alta.fecha_baja.strftime('%d-%m-%Y') if alta.fecha_baja else '-' }}</td>
+                             <td>{{ alta.motivo_baja or '-' }}</td>
+                             <td>{{ alta.total_dias or 0 }}</td>
+                         </tr>
+                         {% endfor %}
+                     </tbody>
+                 </table>
+                 {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+    </div>
+</div>
+{% endblock %}

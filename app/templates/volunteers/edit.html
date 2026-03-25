@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex align-items-center gap-2">
+        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn-icon" title="Volver">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h2>Editar Voluntario</h2>
+            <p class="text-muted" style="margin-bottom: 0;">{{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="settings-layout">
+    <!-- Sidebar info (Read Only) -->
+    <div class="settings-sidebar">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <img src="{{ url_for('static', filename=user.picture) }}" 
+                     style="width: 150px; height: 150px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid var(--border-color);" 
+                     alt="Foto de perfil">
+                <h4 style="margin: 0 0 5px 0;">{{ user.nombre }} {{ user.apellido1 }}</h4>
+                <p class="text-muted">{{ user.run }}</p>
+            </div>
+        </div>
+        <div class="alert">
+            <small>Para cambiar el RUN o la contraseña, por favor contacte al administrador del sistema.</small>
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="settings-main">
+        <div class="card shadow-sm">
+            <div class="card-header">Datos Personales e Institucionales</div>
+            <div class="card-body">
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Basic Name Info -->
+                    <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 20px;">Identificación</h5>
+                    <div class="form-group">
+                        {{ form.nombre.label(class="form-label") }}
+                        {{ form.nombre(class="form-control") }}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="form-group" style="flex: 1;">
+                            {{ form.apellido1.label(class="form-label") }}
+                            {{ form.apellido1(class="form-control") }}
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            {{ form.apellido2.label(class="form-label") }}
+                            {{ form.apellido2(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <!-- Personal Data -->
+                    <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 20px; margin-top: 20px;">Datos Personales</h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            {{ form.fecha_nacimiento.label(class="form-label") }}
+                            {{ form.fecha_nacimiento(class="form-control", type="date") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.ocupacion.label(class="form-label") }}
+                            {{ form.ocupacion(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.telefono.label(class="form-label") }}
+                            {{ form.telefono(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form.direccion.label(class="form-label") }}
+                        {{ form.direccion(class="form-control") }}
+                    </div>
+
+                    <!-- Institutional Data -->
+                    <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 20px; margin-top: 20px;">Datos Institucionales</h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            {{ form.fecha_alta.label(class="form-label") }}
+                            {{ form.fecha_alta(class="form-control", type="date") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.categoria.label(class="form-label") }}
+                            {{ form.categoria(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.fecha_baja.label(class="form-label") }}
+                            {{ form.fecha_baja(class="form-control", type="date") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.motivo_baja.label(class="form-label") }}
+                            {{ form.motivo_baja(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn" style="margin-left: 10px; color: #666;">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de Cargos -->
+    <div class="card shadow-sm" style="margin-top: 30px;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Historial de Cargos</span>
+            <a href="{{ url_for('volunteers.add_cargo', user_id=user.id) }}" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.85rem;">
+                Añadir Cargo
+            </a>
+        </div>
+        <div class="card-body p-0">
+            {% if user.profile.cargos %}
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Cargo</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th style="width: 100px; text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cargo in user.profile.cargos|sort(attribute='fecha_inicio', reverse=True) %}
+                    <tr>
+                        <td class="font-weight-500">{{ cargo.nombre_cargo }}</td>
+                        <td>{{ cargo.fecha_inicio.strftime('%d-%m-%Y') }}</td>
+                        <td>{{ cargo.fecha_termino.strftime('%d-%m-%Y') if cargo.fecha_termino else 'Presente' }}</td>
+                        <td style="text-align: right;">
+                            <div class="btn-group-action">
+                                <a href="{{ url_for('volunteers.edit_cargo', cargo_id=cargo.id) }}" class="btn-icon" title="Editar">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
+                                </a>
+                                <form action="{{ url_for('volunteers.delete_cargo', cargo_id=cargo.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este cargo?');">
+                                    <button type="submit" class="btn-icon btn-icon-danger" title="Eliminar">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="card-body text-center text-muted">
+                <em>No hay cargos registrados para este voluntario.</em>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

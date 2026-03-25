@@ -73,6 +73,7 @@ class HojaServicio(db.Model):
     ocupacion = db.Column(db.String(128))
     direccion = db.Column(db.String(256))
     telefono = db.Column(db.String(20))
+    email = db.Column(db.String(120))
 
     # Voluntarios patrocinantes
     patrocinante1_id = db.Column(

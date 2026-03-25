@@ -60,7 +60,9 @@
                          <img src="{{ url_for('static', filename=user.picture) }}" class="user-avatar" style="width: 36px; height: 36px; border-radius: 12px;" alt="{{ user.nombre }}">
                     </td>
                     <td class="font-weight-500">
-                        {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}
+                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="text-dark text-decoration-none">
+                            {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}
+                        </a>
                     </td>
                     <td>
                         {% if user.profile and user.profile.categoria %}
