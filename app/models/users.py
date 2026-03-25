@@ -22,6 +22,7 @@ class Usuario(UserMixin, db.Model):
     apellido1 = db.Column(db.String(64))
     apellido2 = db.Column(db.String(64))
     pass_hash = db.Column(db.String(256))
+    is_admin = db.Column(db.Boolean, default=False)
 
     profile = db.relationship(
         "HojaServicio",
@@ -54,6 +55,40 @@ class Usuario(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.pass_hash, password)
+
+    def has_permission(self, permission_code):
+        """
+        Check if user has a specific permission.
+        Returns True if user is admin OR if one of their active cargos
+        (or default) has the permission.
+        """
+        if self.is_admin:
+            return True
+
+        from app import db
+        from app.models.hojas_servicio import TipoCargo
+        from app.models.permissions import RolePermission
+
+        # 2. Check permissions for active cargos
+        if self.profile and self.profile.cargos:
+            active_cargo_names = [
+                c.nombre_cargo for c in self.profile.cargos if c.fecha_termino is None
+            ]
+            if active_cargo_names:
+                exists = (
+                    db.session.query(RolePermission)
+                    .join(TipoCargo)
+                    .filter(
+                        TipoCargo.nombre.in_(active_cargo_names),
+                        TipoCargo.categoria == "Compañía",
+                        RolePermission.permission == permission_code,
+                    )
+                    .first()
+                )
+                if exists:
+                    return True
+
+        return False
 
     def __repr__(self):
         return f"<User {self.nombre} {self.apellido1} {self.apellido2}>"

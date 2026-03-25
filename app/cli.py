@@ -49,6 +49,7 @@ def create_admin(username, password, nombre, apellido1, apellido2):
         run=username, nombre=nombre, apellido1=apellido1, apellido2=apellido2
     )
     user.set_password(password)
+    user.is_admin = True
     db.session.add(user)
     db.session.commit()
 
@@ -69,8 +70,8 @@ def init_db():
 
     # Pre-llenar TiposCargo
     if not TipoCargo.query.first():
-        for i, cargo in enumerate(CARGOS_INICIAL):
-            db.session.add(TipoCargo(nombre=cargo, orden=i))
+        for i, (cargo, categoria) in enumerate(CARGOS_INICIAL):
+            db.session.add(TipoCargo(nombre=cargo, categoria=categoria, orden=i))
         db.session.commit()
         click.echo("Cargos iniciales creados.")
 

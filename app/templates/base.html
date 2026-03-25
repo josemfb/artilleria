@@ -59,7 +59,7 @@
                     <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="accordion-content">
-                    <a href="{{ url_for('volunteers.index') }}">Ver voluntarios</a>
+                    <a href="{{ url_for('volunteers.index') }}">Voluntarios</a>
                     <a href="#">Listas</a>
                     <a href="#">Oficiales</a>
                     <a href="#">Registros históricos</a>
@@ -153,6 +153,7 @@
                     <a href="#">Galería</a>
                 </div>
             </div>
+            {% if current_user.is_admin %}
             <div class="accordion-item">
                 <button class="accordion-header">
                     <span class="material-symbols-outlined">settings</span><span>Configuración</span>
@@ -160,8 +161,10 @@
                 </button>
                 <div class="accordion-content">
                     <a href="{{ url_for('settings.cargos') }}">Cargos</a>
+                    <a href="{{ url_for('settings.permissions') }}">Permisos</a>
                 </div>
             </div>
+            {% endif %}
         </aside>
         {% endif %}
 

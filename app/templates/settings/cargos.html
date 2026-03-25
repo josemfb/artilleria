@@ -20,6 +20,7 @@
                         <tr>
                             <th style="width: 50px;" class="text-center">#</th>
                             <th>Nombre del Cargo</th>
+                            <th style="width: 150px;">Categoría</th>
                             <th style="width: 140px; text-align: right;">Acciones</th>
                         </tr>
                     </thead>
@@ -29,15 +30,27 @@
                             <td class="text-center text-muted">{{ loop.index }}</td>
                             <td class="font-weight-500">
                                 <!-- View Mode -->
-                                <div id="view-{{ cargo.id }}">
+                                <div id="view-name-{{ cargo.id }}">
                                     {{ cargo.nombre }}
                                 </div>
                                 <!-- Edit Mode (Hidden by default) -->
-                                <form id="edit-{{ cargo.id }}" action="{{ url_for('settings.edit_cargo', id=cargo.id) }}" method="POST" style="display: none;" class="d-flex align-items-center gap-2">
+                                <form id="edit-form-{{ cargo.id }}" action="{{ url_for('settings.edit_cargo', id=cargo.id) }}" method="POST" style="display: none;" class="d-flex align-items-center gap-2">
                                     <input type="text" name="nombre" value="{{ cargo.nombre }}" class="form-control py-1 px-2" style="height: 32px; font-size: 0.9rem;" required>
                                     <button type="submit" class="btn-icon" title="Guardar" style="color: var(--primary-green);"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg></button>
                                     <button type="button" class="btn-icon" title="Cancelar" onclick="toggleEdit('{{ cargo.id }}')"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg></button>
                                 </form>
+                            </td>
+                            <td>
+                                <div id="view-cat-{{ cargo.id }}">
+                                    {{ cargo.categoria }}
+                                </div>
+                                <div id="edit-cat-{{ cargo.id }}" style="display: none;">
+                                    <select name="categoria" form="edit-form-{{ cargo.id }}" class="form-control py-1 px-2" style="height: 32px; font-size: 0.9rem;">
+                                        {% for cat in categorias %}
+                                        <option value="{{ cat }}" {% if cargo.categoria == cat %}selected{% endif %}>{{ cat }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </td>
                             <td style="text-align: right;">
                                 <div class="btn-group-action">
@@ -85,6 +98,14 @@
                         <label for="nombre" class="form-label">Nombre del Cargo</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ej. Capitán" required>
                     </div>
+                    <div class="form-group">
+                        <label for="categoria" class="form-label">Categoría</label>
+                        <select class="form-control" id="categoria" name="categoria" required>
+                            {% for cat in categorias %}
+                            <option value="{{ cat }}">{{ cat }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary btn-block">Agregar Cargo</button>
                 </form>
             </div>
@@ -94,15 +115,21 @@
 
 <script>
 function toggleEdit(id) {
-    var viewDiv = document.getElementById('view-' + id);
-    var editForm = document.getElementById('edit-' + id);
+    var viewName = document.getElementById('view-name-' + id);
+    var editForm = document.getElementById('edit-form-' + id);
+    var viewCat = document.getElementById('view-cat-' + id);
+    var editCat = document.getElementById('edit-cat-' + id);
     
-    if (editForm.style.display === 'none') {
+    if (editForm.style.display === 'none' || editForm.style.display === '') {
         editForm.style.display = 'flex';
-        viewDiv.style.display = 'none';
+        viewName.style.display = 'none';
+        viewCat.style.display = 'none';
+        editCat.style.display = 'block';
     } else {
         editForm.style.display = 'none';
-        viewDiv.style.display = 'block';
+        viewName.style.display = 'block';
+        viewCat.style.display = 'block';
+        editCat.style.display = 'none';
     }
 }
 </script>

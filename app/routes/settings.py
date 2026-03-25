@@ -1,11 +1,20 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import login_required
+from flask_login import current_user, login_required
 from sqlalchemy import func
 
 from app import db
-from app.models.hojas_servicio import TipoCargo
+from app.models import RolePermission
+from app.models.hojas_servicio import CATEGORIAS_CARGO, TipoCargo
+from app.permissions import SYSTEM_PERMISSIONS
 
 settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
+
+
+@settings_bp.before_request
+def restrict_to_admins():
+    if not current_user.is_authenticated or not current_user.is_admin:
+        flash("No tienes permiso para acceder a esta sección.")
+        return redirect(url_for("main.index"))
 
 
 @settings_bp.route("/cargos", methods=["GET", "POST"])
@@ -13,20 +22,27 @@ settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
 def cargos():
     if request.method == "POST":
         nuevo_cargo = request.form.get("nombre")
-        if nuevo_cargo:
+        nueva_categoria = request.form.get("categoria")
+        if nuevo_cargo and nueva_categoria:
             if TipoCargo.query.filter_by(nombre=nuevo_cargo).first():
                 flash("El cargo ya existe.")
             else:
                 max_orden = db.session.query(func.max(TipoCargo.orden)).scalar()
                 # If table is empty, max_orden is None, so new orden is 1 (or 0)
                 nuevo_orden = (max_orden if max_orden is not None else -1) + 1
-                db.session.add(TipoCargo(nombre=nuevo_cargo, orden=nuevo_orden))
+                db.session.add(
+                    TipoCargo(
+                        nombre=nuevo_cargo, categoria=nueva_categoria, orden=nuevo_orden
+                    )
+                )
                 db.session.commit()
                 flash("Cargo agregado.")
         return redirect(url_for("settings.cargos"))
 
     cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
-    return render_template("settings/cargos.html", cargos=cargos)
+    return render_template(
+        "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+    )
 
 
 @settings_bp.route("/cargos/delete/<int:id>", methods=["POST"])
@@ -76,8 +92,61 @@ def move_cargo(id, direction):
 def edit_cargo(id):
     cargo = db.session.get(TipoCargo, id)
     nuevo_nombre = request.form.get("nombre")
-    if cargo and nuevo_nombre:
+    nueva_categoria = request.form.get("categoria")
+    if cargo and nuevo_nombre and nueva_categoria:
         cargo.nombre = nuevo_nombre
+        cargo.categoria = nueva_categoria
         db.session.commit()
         flash("Cargo actualizado.")
     return redirect(url_for("settings.cargos"))
+
+
+@settings_bp.route("/permissions", methods=["GET", "POST"])
+@login_required
+def permissions():
+    cargos = (
+        TipoCargo.query.filter_by(categoria="Compañía").order_by(TipoCargo.orden).all()
+    )
+
+    # Determine which cargo is selected (None = Default/No Rank)
+    selected_cargo_id = request.args.get("cargo_id", type=int)
+
+    # If no ID provided or ID is 0 (old default), select the first available cargo
+    if (not selected_cargo_id or selected_cargo_id == 0) and cargos:
+        selected_cargo_id = cargos[0].id
+
+    selected_cargo = (
+        db.session.get(TipoCargo, selected_cargo_id) if selected_cargo_id else None
+    )
+
+    if request.method == "POST":
+        # Clear existing permissions for this scope
+        RolePermission.query.filter_by(tipo_cargo_id=selected_cargo_id).delete()
+
+        # Add new permissions
+        # Form keys are like "perm_volunteers.view"
+        for key in request.form:
+            if key.startswith("perm_"):
+                perm_code = key.replace("perm_", "")
+                new_perm = RolePermission(
+                    tipo_cargo_id=selected_cargo_id, permission=perm_code
+                )
+                db.session.add(new_perm)
+
+        db.session.commit()
+        flash("Permisos actualizados correctamente.")
+        return redirect(url_for("settings.permissions", cargo_id=selected_cargo_id))
+
+    # Get active permissions for the selected scope to pre-fill checkboxes
+    active_perms = [
+        p.permission
+        for p in RolePermission.query.filter_by(tipo_cargo_id=selected_cargo_id).all()
+    ]
+
+    return render_template(
+        "settings/permissions.html",
+        cargos=cargos,
+        system_permissions=SYSTEM_PERMISSIONS,
+        selected_cargo=selected_cargo,
+        active_perms=active_perms,
+    )

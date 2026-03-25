@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required
 
-from app.models import HojaServicio, Usuario
+from app.models import Usuario
 
 volunteers_bp = Blueprint("volunteers", __name__, url_prefix="/voluntarios")
 
@@ -13,7 +13,7 @@ def index():
     order = request.args.get("order", "asc")
     reverse = order == "desc"
 
-    users = Usuario.query.join(HojaServicio).all()
+    users = Usuario.query.join(Usuario.profile).all()
 
     def get_sort_key(user):
         profile = user.profile

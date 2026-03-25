@@ -5,35 +5,36 @@ from app import db
 
 MOTIVOS_BAJA = ("Falleció", "Renunció", "Separado", "Expulsado")
 CATEGORIAS = ("Voluntario activo", "Voluntario honorario", "Voluntario 3.ª Valparaíso")
+CATEGORIAS_CARGO = ("Compañía", "Cuerpo")
 
 CARGOS_INICIAL = (
-    "Director",
-    "Capitán",
-    "Teniente 1.º",
-    "Teniente 2.º",
-    "Teniente 3.º",
-    "Secretario",
-    "Tesorero",
-    "Intendente",
-    "Maquinista",
-    "Ayudante",
-    "Consejero de Disciplina",
-    "Consejero de Disciplina Suplente",
-    "Cirujano",
-    "Superintendente",
-    "Vicesuperintendente",
-    "Comandante",
-    "2.º Comandante",
-    "3.º Comandante",
-    "4.º Comandante",
-    "Secretario General",
-    "Tesorero General",
-    "Intendente General",
-    "Director Honorario",
-    "Inspector de Administración",
-    "Ayudante de Administración",
-    "Inspector de Comandancia",
-    "Ayudante de Comandancia",
+    ("Director", "Compañía"),
+    ("Capitán", "Compañía"),
+    ("Teniente 1.º", "Compañía"),
+    ("Teniente 2.º", "Compañía"),
+    ("Teniente 3.º", "Compañía"),
+    ("Secretario", "Compañía"),
+    ("Tesorero", "Compañía"),
+    ("Intendente", "Compañía"),
+    ("Maquinista", "Compañía"),
+    ("Ayudante", "Compañía"),
+    ("Consejero de Disciplina", "Compañía"),
+    ("Consejero de Disciplina Suplente", "Compañía"),
+    ("Cirujano", "Compañía"),
+    ("Superintendente", "Cuerpo"),
+    ("Vicesuperintendente", "Cuerpo"),
+    ("Comandante", "Cuerpo"),
+    ("2.º Comandante", "Cuerpo"),
+    ("3.º Comandante", "Cuerpo"),
+    ("4.º Comandante", "Cuerpo"),
+    ("Secretario General", "Cuerpo"),
+    ("Tesorero General", "Cuerpo"),
+    ("Intendente General", "Cuerpo"),
+    ("Director Honorario", "Cuerpo"),
+    ("Inspector de Administración", "Cuerpo"),
+    ("Ayudante de Administración", "Cuerpo"),
+    ("Inspector de Comandancia", "Cuerpo"),
+    ("Ayudante de Comandancia", "Cuerpo"),
 )
 
 COMPETENCIAS = (
@@ -208,6 +209,11 @@ class TipoCargo(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(64), unique=True, nullable=False)
+    categoria = db.Column(
+        db.Enum(*CATEGORIAS_CARGO, name="categoria_cargo_enum"),
+        nullable=False,
+        default="Compañía",
+    )
     orden = db.Column(db.Integer, default=0)
 
     def __repr__(self):

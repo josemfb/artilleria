@@ -11,4 +11,5 @@ from .hojas_servicio import (
     PremioAsistencia,
     TipoCargo,
 )
+from .permissions import RolePermission
 from .users import Usuario
