@@ -1,3 +1,8 @@
+/* Global reset to ensure padding is included in width calculations */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 :root {
     --primary-green: #2c5f2d; /* Darkish green accent */
     --off-white: #f8f9fa;
@@ -5,6 +10,138 @@
     --sidebar-width: 300px;
     --white: #ffffff;
     --border-color: #e9ecef;
+}
+
+/* Volunteer Details Tab Styles */
+#volunteer-details-content .service-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border-color);
+    background: var(--off-white);
+    padding: 0 1rem;
+    overflow-x: auto;
+}
+
+#volunteer-details-content .service-tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--off-black);
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: 14px;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#volunteer-details-content .service-tab:hover {
+    border-bottom-color: var(--primary-green);
+    color: var(--primary-green);
+}
+
+#volunteer-details-content .service-tab.active {
+    border-bottom-color: var(--primary-green);
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+#volunteer-details-content .tab-content {
+    background: white;
+}
+
+#volunteer-details-content .tab-pane {
+    display: none;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+#volunteer-details-content .tab-pane.active {
+    display: block;
+}
+
+/* Override settings layout specifically for volunteer details */
+.volunteer-details-container {
+    width: 100%;
+}
+
+/* Volunteer Details Two-Column Layout */
+.volunteer-details-row {
+    display: flex !important;
+    flex-wrap: wrap !important; /* Allows wrapping on mobile via media query */
+    margin: 0 -0.75rem !important;
+    align-items: flex-start !important; /* Keeps data aligned at the top */
+}
+
+.volunteer-details-col-4 {
+    flex: 0 0 30% !important; /* Slightly reduced to guarantee fit */
+    max-width: 30% !important;
+    padding: 0 0.75rem !important;
+}
+
+.volunteer-details-col-8 {
+    flex: 0 0 70% !important;
+    max-width: 70% !important;
+    padding: 0 0.75rem !important;
+}
+
+/* Profile Image styling */
+.volunteer-profile-img {
+    width: 100%;
+    max-width: 220px; /* Limits size on large screens */
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+
+/* Personal data grid within the right column */
+#volunteer-details-content .personal-data-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 20px !important;
+}
+
+#volunteer-details-content .personal-data-grid .full-width {
+    grid-column: 1 / -1 !important;
+}
+
+@media (max-width: 768px) {
+    .volunteer-details-col-4,
+    .volunteer-details-col-8 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Table styles for tabs */
+#volunteer-details-content .tab-pane .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+#volunteer-details-content .tab-pane .table th,
+#volunteer-details-content .tab-pane .table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#volunteer-details-content .tab-pane .table th {
+    border-bottom: 2px solid var(--border-color);
+    color: var(--off-black);
+    font-weight: 600;
+    background: var(--off-white);
+}
+
+#volunteer-details-content .tab-pane .table tbody tr:hover {
+    background: var(--off-white);
 }
 
 body {

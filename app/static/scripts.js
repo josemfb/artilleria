@@ -61,8 +61,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-     // Disable default action for placeholder links in sidebar
-     document.querySelectorAll('.sidebar a[href="#"]').forEach(link => {
-         link.addEventListener('click', (e) => e.preventDefault());
-     });
+    // Disable default action for placeholder links in sidebar
+    document.querySelectorAll('.sidebar a[href="#"]').forEach(link => {
+        link.addEventListener('click', (e) => e.preventDefault());
+    });
 });
+
+// Tab switching function for volunteer details
+function showTab(tabId) {
+    // Hide all tab panes
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    tabPanes.forEach(pane => {
+        pane.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.service-tab');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show the selected tab pane
+    const selectedPane = document.getElementById(tabId);
+    if (selectedPane) {
+        selectedPane.classList.add('active');
+    }
+    
+    // Add active class to the clicked tab button
+    const clickedButton = document.querySelector(`[onclick="showTab('${tabId}')"]`);
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    }
+}

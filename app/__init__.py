@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
 from config import Config
+from app.utils import validate_and_format_run
 
 
 class Base(DeclarativeBase):
@@ -24,6 +25,14 @@ login.login_message = ""
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # Registrar template filters
+    @app.template_filter('format_run')
+    def format_run_filter(run_str):
+        try:
+            return validate_and_format_run(run_str, points=True)
+        except ValueError:
+            return run_str
 
     # Inicializar extensiones de Flask
     db.init_app(app)

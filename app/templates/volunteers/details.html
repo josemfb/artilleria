@@ -11,7 +11,15 @@
         </a>
         <div>
             <h2>{{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</h2>
-            <p class="text-muted" style="margin-bottom: 0;">{{ user.run }}</p>
+            <p class="text-muted" style="margin-bottom: 0;">
+                {% if user.profile and user.profile.cargo_actual %}
+                    {{ user.profile.cargo_actual }}
+                {% elif user.profile and user.profile.categoria %}
+                    {{ user.profile.categoria }}
+                {% else %}
+                    Voluntario
+                {% endif %}
+            </p>
         </div>
     </div>
         
@@ -23,193 +31,353 @@
     </div>
 </div>
 
-<div class="settings-layout">
-    <!-- Sidebar: Photo & Summary -->
-    <div class="settings-sidebar">
-        <div class="card shadow-sm text-center">
-            <div class="card-body">
-                <img src="{{ url_for('static', filename=user.picture) }}" 
-                     style="width: 150px; height: 150px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid var(--border-color);" 
-                     alt="Foto de perfil">
-                <h4 style="margin: 0 0 5px 0;">{{ user.nombre }} {{ user.apellido1 }}</h4>
-                <p class="text-muted">
-                    {% if user.profile and user.profile.categoria %}{{ user.profile.categoria }}{% else %}Sin categoría{% endif %}
-                </p>
-                {% if user.profile and user.profile.cargo_actual %}
-                <span class="badge-count" style="background-color: var(--primary-green); color: white;">
-                    {{ user.profile.cargo_actual }}
-                </span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="settings-main">
+<div class="volunteer-details-container">
         
-        <!-- 1. Basic Info (Visible to everyone) -->
+        <!-- Tabbed Service Record -->
         <div class="card shadow-sm">
-            <div class="card-header">Información General</div>
-            <div class="card-body">
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
-                    
-                    <!-- Institutional Data -->
-                    <div>
-                        <label class="form-label">Fecha de Alta</label>
-                        <div>
-                            {% if user.profile.fecha_alta %}
-                                {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
-                                <small class="text-muted">
-                                    ({{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días)
-                                </small>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
+            <div class="card-body p-0">
+                <!-- Tabs Navigation -->
+                <div class="service-tabs">
+                    <button class="service-tab active" onclick="showTab('datos')" type="button">Datos personales</button>
+                    {% if show_full %}
+                    <button class="service-tab" onclick="showTab('guardias')" type="button">Noches de guardia</button>
+                    <button class="service-tab" onclick="showTab('cargos')" type="button">Cargos</button>
+                    <button class="service-tab" onclick="showTab('asistencias')" type="button">Asistencias</button>
+                    <button class="service-tab" onclick="showTab('premios')" type="button">Premios</button>
+                    <button class="service-tab" onclick="showTab('anotaciones')" type="button">Anotaciones</button>
+                    {% endif %}
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="service-tabs-content">
+                    <!-- Datos Personales Tab -->
+                    <div class="tab-pane active" id="datos">
+                        <div class="volunteer-details-row">
+                            <!-- Left Column: Profile Info -->
+                            <div class="volunteer-details-col-4">
+                                <div class="text-center">
+                                    <img src="{{ url_for('static', filename=user.picture) }}" class="volunteer-profile-img" alt="Foto de perfil">
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column: Other Personal Data -->
+                            <div class="volunteer-details-col-8">
+                                <div class="personal-data-grid">
+                                    
+                                    <div>
+                                        <label class="form-label">Fecha de Alta</label>
+                                        <div>
+                                            {% if user.profile.fecha_alta %}
+                                                {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
+                                                <small class="text-muted">
+                                                    ({{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días)
+                                                </small>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="form-label">Fecha Nacimiento</label>
+                                        <div>
+                                            {% if user.profile.fecha_nacimiento %}
+                                                {{ user.profile.fecha_nacimiento.strftime('%d-%m-%Y') }}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">Ocupación</label>
+                                        <div>{{ user.profile.ocupacion or '-' }}</div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">Teléfono</label>
+                                        <div>{{ user.profile.telefono or '-' }}</div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">Email</label>
+                                        <div>
+                                            {% if user.profile.email %}
+                                                {{ user.profile.email }}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label">RUN</label>
+                                        <div>{{ user.run|format_run }}</div>
+                                    </div>
+
+                                    {% if user.profile and user.profile.cargo_actual %}
+                                    <div>
+                                        <label class="form-label">Cargo Actual</label>
+                                        <div>{{ user.profile.cargo_actual }}</div>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="full-width">
+                                        <label class="form-label">Dirección</label>
+                                        <div>{{ user.profile.direccion or '-' }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <!-- Personal Data -->
-                    <div>
-                        <label class="form-label">Fecha Nacimiento</label>
-                        <div>
-                            {% if user.profile.fecha_nacimiento %}
-                                {{ user.profile.fecha_nacimiento.strftime('%d-%m-%Y') }}
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
+
+                    <!-- Noches de Guardia Tab -->
+                    {% if show_full %}
+                    <div class="tab-pane" id="guardias">
+                        <div class="text-center text-muted py-5">
+                            <p class="mt-3">No hay información de noches de guardia disponible.</p>
                         </div>
                     </div>
+                    {% endif %}
 
-                    <div>
-                        <label class="form-label">Ocupación</label>
-                        <div>{{ user.profile.ocupacion or '-' }}</div>
-                    </div>
+                    <!-- Cargos Tab -->
+                    {% if show_full %}
+                    <div class="tab-pane" id="cargos">
+                        {% if user.profile.cargos %}
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Cargo</th>
+                                    <th>Desde</th>
+                                    <th>Hasta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cargo in user.profile.cargos|sort(attribute='fecha_inicio', reverse=True) %}
+                                <tr>
+                                    <td>{{ cargo.nombre_cargo }}</td>
+                                    <td>{{ cargo.fecha_inicio.strftime('%d-%m-%Y') }}</td>
+                                    <td>{{ cargo.fecha_termino.strftime('%d-%m-%Y') if cargo.fecha_termino else 'Presente' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No registra cargos.</p>
+                        {% endif %}
+                    {% endif %}
 
-                    <div>
-                        <label class="form-label">Teléfono</label>
-                        <div>{{ user.profile.telefono or '-' }}</div>
-                    </div>
+                    <!-- Asistencias Tab -->
+                    {% if show_full %}
+                    <div class="tab-pane" id="asistencias">
+                        {% if user.profile.asistencias %}
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Año</th>
+                                    <th>Actos Obligatorios</th>
+                                    <th>Asistencias</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for asistencia in user.profile.asistencias|sort(attribute='fecha', reverse=True) %}
+                                <tr>
+                                    <td>{{ asistencia.fecha }}</td>
+                                    <td>{{ asistencia.total_actos_obligatorios or '-' }}</td>
+                                    <td>{{ asistencia.total_asistencias or '-' }}</td>
+                                    <td>
+                                        {% if asistencia.total_actos_obligatorios and asistencia.total_asistencias %}
+                                            {{ "%.1f"|format((asistencia.total_asistencias / asistencia.total_actos_obligatorios) * 100) }}%
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No registra asistencias.</p>
+                        {% endif %}
+                    {% endif %}
 
-                    <div>
-                        <label class="form-label">Email</label>
-                        <div>
-                            {% if user.profile.email %}
-                                {{ user.profile.email }}
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </div>
-                    </div>
+                    <!-- Premios Tab -->
+                    {% if show_full %}
+                    <div class="tab-pane" id="premios">
+                        {% if user.profile.premios %}
+                        <table class="table table-sm mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Premio (Años)</th>
+                                    <th>Fecha Obtención</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for premio in user.profile.premios|sort(attribute='premio', reverse=True) %}
+                                <tr>
+                                    <td>{{ premio.premio }} Años</td>
+                                    <td>{{ premio.fecha_obtencion.strftime('%d-%m-%Y') if premio.fecha_obtencion else '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No registra premios.</p>
+                        {% endif %}
 
-                    <div style="grid-column: 1 / -1;">
-                        <label class="form-label">Dirección</label>
-                        <div>{{ user.profile.direccion or '-' }}</div>
-                    </div>
+                        <!-- Competencias -->
+                        {% if user.profile.competencias %}
+                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Competencias</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Competencia</th>
+                                    <th>Año</th>
+                                    <th>Lugar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for competencia in user.profile.competencias|sort(attribute='fecha', reverse=True) %}
+                                <tr>
+                                    <td>{{ competencia.nombre_competencia }}</td>
+                                    <td>{{ competencia.fecha }}</td>
+                                    <td>{{ competencia.lugar or '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Anotaciones Tab -->
+                    {% if show_full %}
+                    <div class="tab-pane" id="anotaciones">
+                        <!-- Cursos -->
+                        {% if user.profile.cursos %}
+                        <ul style="list-style: none; padding-left: 0;" class="mb-4">
+                            {% for curso in user.profile.cursos|sort(attribute='fecha', reverse=True) %}
+                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                <span>{{ curso.nombre_curso }}</span>
+                                <span class="text-muted">{{ curso.fecha }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted mb-4">No registra cursos.</p>
+                        {% endif %}
+
+                        <!-- Niveles Académicos -->
+                        {% if user.profile.niveles_academicos %}
+                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Niveles Académicos</h5>
+                        <table class="table table-sm mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Nivel</th>
+                                    <th>Año</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for nivel in user.profile.niveles_academicos|sort(attribute='fecha', reverse=True) %}
+                                <tr>
+                                    <td>{{ nivel.nivel }}</td>
+                                    <td>{{ nivel.fecha }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+
+                        <!-- Operadores -->
+                        {% if user.profile.operadores %}
+                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Operadores de Máquinas</h5>
+                        <table class="table table-sm mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Máquina</th>
+                                    <th>Nivel</th>
+                                    <th>Fecha Autorización</th>
+                                    <th>Comentario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for operador in user.profile.operadores|sort(attribute='fecha_autorizacion', reverse=True) %}
+                                <tr>
+                                    <td>{{ operador.maquina or '-' }}</td>
+                                    <td>{{ operador.nivel or '-' }}</td>
+                                    <td>{{ operador.fecha_autorizacion.strftime('%d-%m-%Y') if operador.fecha_autorizacion else '-' }}</td>
+                                    <td>{{ operador.comentario or '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+
+                        <!-- Otras Anotaciones -->
+                        {% if user.profile.otras_anotaciones %}
+                        <table class="table table-sm mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Año</th>
+                                    <th>Anotación</th>
+                                    <th>Comentario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for anotacion in user.profile.otras_anotaciones|sort(attribute='fecha', reverse=True) %}
+                                <tr>
+                                    <td>{{ anotacion.fecha }}</td>
+                                    <td>{{ anotacion.texto_anotacion }}</td>
+                                    <td>{{ anotacion.comentario or '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+
+                        <!-- Altas Anteriores -->
+                        {% if user.profile.altas_anteriores %}
+                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Altas Anteriores</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Fecha Alta</th>
+                                    <th>Fecha Baja</th>
+                                    <th>Motivo</th>
+                                    <th>Días servidos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alta in user.profile.altas_anteriores %}
+                                <tr>
+                                    <td>{{ alta.fecha_alta.strftime('%d-%m-%Y') if alta.fecha_alta else '-' }}</td>
+                                    <td>{{ alta.fecha_baja.strftime('%d-%m-%Y') if alta.fecha_baja else '-' }}</td>
+                                    <td>{{ alta.motivo_baja or '-' }}</td>
+                                    <td>{{ alta.total_dias or 0 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
-
-        <!-- 2. Extended Service Record (Visible only with permission) -->
-        {% if show_full %}
         
-        <div class="card shadow-sm">
-            <div class="card-header bg-light">Hoja de Servicios</div>
-            
-            <!-- Tabs or simple sections could work here. Using simple headers for now -->
-            
-            <!-- Historial de Cargos -->
-            <div class="card-body">
-                <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px;">Historial de Cargos</h5>
-                {% if user.profile.cargos %}
-                <table class="table table-sm mb-3">
-                    <thead>
-                        <tr>
-                            <th>Cargo</th>
-                            <th>Desde</th>
-                            <th>Hasta</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cargo in user.profile.cargos|sort(attribute='fecha_inicio', reverse=True) %}
-                        <tr>
-                            <td>{{ cargo.nombre_cargo }}</td>
-                            <td>{{ cargo.fecha_inicio.strftime('%d-%m-%Y') }}</td>
-                            <td>{{ cargo.fecha_termino.strftime('%d-%m-%Y') if cargo.fecha_termino else 'Presente' }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted">No registra cargos.</p>
-                {% endif %}
-
-                <!-- Premios -->
-                <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Premios de Constancia</h5>
-                {% if user.profile.premios %}
-                <table class="table table-sm mb-3">
-                    <thead>
-                        <tr>
-                            <th>Premio (Años)</th>
-                            <th>Fecha Obtención</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for premio in user.profile.premios|sort(attribute='premio', reverse=True) %}
-                        <tr>
-                            <td>{{ premio.premio }} Años</td>
-                            <td>{{ premio.fecha_obtencion.strftime('%d-%m-%Y') if premio.fecha_obtencion else '-' }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted">No registra premios.</p>
-                {% endif %}
-
-                <!-- Cursos -->
-                <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Cursos y Capacitación</h5>
-                {% if user.profile.cursos %}
-                <ul style="list-style: none; padding-left: 0;">
-                    {% for curso in user.profile.cursos|sort(attribute='fecha', reverse=True) %}
-                    <li class="d-flex justify-content-between py-2 border-bottom">
-                        <span>{{ curso.nombre_curso }}</span>
-                        <span class="text-muted">{{ curso.fecha }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p class="text-muted">No registra cursos.</p>
-                {% endif %}
-
-                 <!-- Altas Anteriores -->
-                 {% if user.profile.altas_anteriores %}
-                 <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Altas Anteriores</h5>
-                 <table class="table table-sm">
-                     <thead>
-                         <tr>
-                             <th>Fecha Alta</th>
-                             <th>Fecha Baja</th>
-                             <th>Motivo</th>
-                             <th>Días servidos</th>
-                         </tr>
-                     </thead>
-                     <tbody>
-                         {% for alta in user.profile.altas_anteriores %}
-                         <tr>
-                             <td>{{ alta.fecha_alta.strftime('%d-%m-%Y') if alta.fecha_alta else '-' }}</td>
-                             <td>{{ alta.fecha_baja.strftime('%d-%m-%Y') if alta.fecha_baja else '-' }}</td>
-                             <td>{{ alta.motivo_baja or '-' }}</td>
-                             <td>{{ alta.total_dias or 0 }}</td>
-                         </tr>
-                         {% endfor %}
-                     </tbody>
-                 </table>
-                 {% endif %}
-            </div>
-        </div>
-        {% endif %}
-        
-    </div>
 </div>
 </div>
+
+<script>
+function showTab(tabId) {
+    const container = document.getElementById('volunteer-details-content');
+    const panes = container.querySelectorAll('.tab-pane');
+    const tabs = container.querySelectorAll('.service-tab');
+    
+    panes.forEach(pane => pane.classList.remove('active'));
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+</script>
 {% endblock %}
