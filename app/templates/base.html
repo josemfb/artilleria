@@ -20,7 +20,20 @@
             {% if current_user.is_authenticated %}
                 <div class="user-menu-container">
                     <button class="user-menu-toggle">
-                        <span>{{ current_user.nombre }} {{ current_user.apellido1 }}</span>
+                        <div class="user-info">
+                            <span class="user-name">{{ current_user.nombre }} {{ current_user.apellido1 }}</span>
+                            <span class="user-rank">
+                                {% if current_user.is_admin %}
+                                    Administrador
+                                {% elif current_user.profile and current_user.profile.cargo_actual %}
+                                    {{ current_user.profile.cargo_actual }}
+                                {% elif current_user.profile and current_user.profile.categoria %}
+                                    {{ current_user.profile.categoria }}
+                                {% else %}
+                                    Voluntario
+                                {% endif %}
+                            </span>
+                        </div>
                         <img src="{{ url_for('static', filename=current_user.picture) }}" class="user-avatar" alt="Perfil">
                     </button>
                     <div class="user-dropdown">

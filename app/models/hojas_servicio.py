@@ -125,12 +125,18 @@ class HojaServicio(db.Model):
 
     @property
     def cargo_actual(self):
-        cargos = [
-            c.nombre_cargo
+        # Get all active cargos and sort by fecha_inicio (most recent first)
+        active_cargos = [
+            c
             for c in self.cargos
-            if c.fecha_termino is None and c.nombre_cargo
+            if c.fecha_termino is None and c.nombre_cargo and c.fecha_inicio
         ]
-        return ", ".join(cargos) if cargos else None
+
+        # Sort by fecha_inicio descending (most recent first)
+        active_cargos.sort(key=lambda c: c.fecha_inicio, reverse=True)
+
+        # Return only the most recent cargo name
+        return active_cargos[0].nombre_cargo if active_cargos else None
 
     @property
     def antiguedad(self):
