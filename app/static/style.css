@@ -18,6 +18,11 @@ body {
     min-height: 100vh;
 }
 
+/* Remove underlines from all links */
+a {
+    text-decoration: none;
+}
+
 /* Top Navbar */
 .navbar {
     background-color: var(--primary-green);
