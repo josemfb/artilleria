@@ -2,8 +2,15 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>Voluntarios</h2>
-    <p class="text-muted">Nómina de voluntarios de la Quinta Compañía.</p>
+    <div class="d-flex align-items-center" style="justify-content: space-between;">
+        <div>
+            <h2>Voluntarios</h2>
+            <p class="text-muted" style="margin-bottom: 0;">Nómina de voluntarios de la Quinta Compañía.</p>
+        </div>
+        {% if current_user.has_permission('volunteers.add_volunteer') %}
+        <a href="{{ url_for('main.add_user') }}" class="btn btn-primary">Añadir voluntario</a>
+        {% endif %}
+    </div>
 </div>
 
 <div class="card shadow-sm">
