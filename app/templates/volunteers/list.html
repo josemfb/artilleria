@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="volunteers-list-content">
 <div class="page-header">
     <div class="d-flex align-items-center" style="justify-content: space-between;">
         <div>
@@ -8,7 +9,7 @@
             <p class="text-muted" style="margin-bottom: 0;">Nómina de voluntarios de la Quinta Compañía.</p>
         </div>
         {% if current_user.has_permission('volunteers.add_volunteer') %}
-        <a href="{{ url_for('main.add_user') }}" class="btn btn-primary">Añadir voluntario</a>
+        <a href="{{ url_for('main.add_user') }}" class="btn btn-primary" hx-boost="true" hx-target="#main-content" hx-swap="outerHTML">Añadir voluntario</a>
         {% endif %}
     </div>
 </div>
@@ -20,7 +21,12 @@
                 <tr>
                     <th style="width: 60px;"></th>
                     <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='apellido', order='desc' if current_sort == 'apellido' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                        <a href="{{ url_for('volunteers.index', sort_by='apellido', order='desc' if current_sort == 'apellido' and current_order == 'asc' else 'asc') }}"
+                           class="text-dark text-decoration-none"
+                           hx-boost="true"
+                           hx-target="#main-content"
+                           hx-select="#main-content"
+                           hx-swap="outerHTML">
                             Nombre
                             <span class="sort-icon" {% if current_sort != 'apellido' %}style="visibility: hidden"{% endif %}>
                                 {{ '↓' if current_sort == 'apellido' and current_order == 'asc' else '↑' }}
@@ -28,7 +34,12 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='categoria', order='desc' if current_sort == 'categoria' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                        <a href="{{ url_for('volunteers.index', sort_by='categoria', order='desc' if current_sort == 'categoria' and current_order == 'asc' else 'asc') }}"
+                           class="text-dark text-decoration-none"
+                           hx-boost="true"
+                           hx-target="#main-content"
+                           hx-select="#main-content"
+                           hx-swap="outerHTML">
                             Categoría
                             <span class="sort-icon" {% if current_sort != 'categoria' %}style="visibility: hidden"{% endif %}>
                                 {{ '↓' if current_sort == 'categoria' and current_order == 'asc' else '↑' }}
@@ -36,7 +47,12 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='cargo', order='desc' if current_sort == 'cargo' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                        <a href="{{ url_for('volunteers.index', sort_by='cargo', order='desc' if current_sort == 'cargo' and current_order == 'asc' else 'asc') }}"
+                           class="text-dark text-decoration-none"
+                           hx-boost="true"
+                           hx-target="#main-content"
+                           hx-select="#main-content"
+                           hx-swap="outerHTML">
                             Cargo
                             <span class="sort-icon" {% if current_sort != 'cargo' %}style="visibility: hidden"{% endif %}>
                                 {{ '↓' if current_sort == 'cargo' and current_order == 'asc' else '↑' }}
@@ -44,7 +60,12 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='antiguedad', order='desc' if current_sort == 'antiguedad' and current_order == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                        <a href="{{ url_for('volunteers.index', sort_by='antiguedad', order='desc' if current_sort == 'antiguedad' and current_order == 'asc' else 'asc') }}"
+                           class="text-dark text-decoration-none"
+                           hx-boost="true"
+                           hx-target="#main-content"
+                           hx-select="#main-content"
+                           hx-swap="outerHTML">
                             Antigüedad
                             <span class="sort-icon" {% if current_sort != 'antiguedad' %}style="visibility: hidden"{% endif %}>
                                 {{ '↓' if current_sort == 'antiguedad' and current_order == 'asc' else '↑' }}
@@ -60,7 +81,12 @@
                          <img src="{{ url_for('static', filename=user.picture) }}" class="user-avatar" style="width: 36px; height: 36px; border-radius: 12px;" alt="{{ user.nombre }}">
                     </td>
                     <td class="font-weight-500">
-                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="text-dark text-decoration-none">
+                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}"
+                           class="text-dark text-decoration-none"
+                           hx-boost="true"
+                           hx-target="#main-content"
+                           hx-select="#main-content"
+                           hx-swap="outerHTML">
                             {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}
                         </a>
                     </td>
@@ -97,5 +123,6 @@
             </tbody>
         </table>
     </div>
+</div>
 </div>
 {% endblock %}

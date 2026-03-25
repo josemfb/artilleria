@@ -3,8 +3,8 @@ from flask_login import current_user, login_required
 from sqlalchemy import func
 
 from app import db
-from app.models import RolePermission
-from app.models.hojas_servicio import CATEGORIAS_CARGO, TipoCargo
+from app.models import RolePermission, TipoCargo
+from app.models.hojas_servicio import CATEGORIAS_CARGO
 from app.permissions import SYSTEM_PERMISSIONS
 
 settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
@@ -24,22 +24,28 @@ def cargos():
         nuevo_cargo = request.form.get("nombre")
         nueva_categoria = request.form.get("categoria")
         if nuevo_cargo and nueva_categoria:
-            if TipoCargo.query.filter_by(nombre=nuevo_cargo).first():
-                flash("El cargo ya existe.")
+            # Check if exists
+            exists = TipoCargo.query.filter_by(nombre=nuevo_cargo).first()
+            if exists:
+                flash("El cargo ya existe.", "error")
             else:
                 max_orden = db.session.query(func.max(TipoCargo.orden)).scalar()
                 # If table is empty, max_orden is None, so new orden is 1 (or 0)
                 nuevo_orden = (max_orden if max_orden is not None else -1) + 1
-                db.session.add(
-                    TipoCargo(
-                        nombre=nuevo_cargo, categoria=nueva_categoria, orden=nuevo_orden
-                    )
+                new_cargo = TipoCargo(
+                    nombre=nuevo_cargo, categoria=nueva_categoria, orden=nuevo_orden
                 )
+                db.session.add(new_cargo)
                 db.session.commit()
-                flash("Cargo agregado.")
+                flash("Cargo agregado.", "success")
+        
         return redirect(url_for("settings.cargos"))
 
     cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
+    if request.headers.get("HX-Request"):
+        return render_template(
+             "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+        )
     return render_template(
         "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
     )
@@ -52,7 +58,14 @@ def delete_cargo(id):
     if cargo:
         db.session.delete(cargo)
         db.session.commit()
-        flash("Cargo eliminado.")
+        flash("Cargo eliminado.", "success")
+    
+    if request.headers.get("HX-Request"):
+        cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
+        return render_template(
+            "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+        )
+
     return redirect(url_for("settings.cargos"))
 
 
@@ -61,6 +74,11 @@ def delete_cargo(id):
 def move_cargo(id, direction):
     cargo = db.session.get(TipoCargo, id)
     if not cargo:
+        if request.headers.get("HX-Request"):
+            cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
+            return render_template(
+                "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+            )
         return redirect(url_for("settings.cargos"))
 
     target_cargo = None
@@ -83,6 +101,12 @@ def move_cargo(id, direction):
         db.session.add(cargo)
         db.session.add(target_cargo)
         db.session.commit()
+    
+    if request.headers.get("HX-Request"):
+        cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
+        return render_template(
+            "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+        )
 
     return redirect(url_for("settings.cargos"))
 
@@ -97,7 +121,14 @@ def edit_cargo(id):
         cargo.nombre = nuevo_nombre
         cargo.categoria = nueva_categoria
         db.session.commit()
-        flash("Cargo actualizado.")
+        flash("Cargo actualizado.", "success")
+    
+    if request.headers.get("HX-Request"):
+        cargos = TipoCargo.query.order_by(TipoCargo.orden).all()
+        return render_template(
+            "settings/cargos.html", cargos=cargos, categorias=CATEGORIAS_CARGO
+        )
+
     return redirect(url_for("settings.cargos"))
 
 
@@ -134,7 +165,22 @@ def permissions():
                 db.session.add(new_perm)
 
         db.session.commit()
-        flash("Permisos actualizados correctamente.")
+        flash("Permisos actualizados correctamente.", "success")
+        
+        # When using HTMX, we just want to re-render the page content with updated state
+        if request.headers.get("HX-Request"):
+            active_perms = [
+                p.permission
+                for p in RolePermission.query.filter_by(tipo_cargo_id=selected_cargo_id).all()
+            ]
+            return render_template(
+                "settings/permissions.html",
+                cargos=cargos,
+                system_permissions=SYSTEM_PERMISSIONS,
+                selected_cargo=selected_cargo,
+                active_perms=active_perms,
+            )
+
         return redirect(url_for("settings.permissions", cargo_id=selected_cargo_id))
 
     # Get active permissions for the selected scope to pre-fill checkboxes
@@ -142,6 +188,15 @@ def permissions():
         p.permission
         for p in RolePermission.query.filter_by(tipo_cargo_id=selected_cargo_id).all()
     ]
+    
+    if request.headers.get("HX-Request"):
+        return render_template(
+            "settings/permissions.html",
+            cargos=cargos,
+            system_permissions=SYSTEM_PERMISSIONS,
+            selected_cargo=selected_cargo,
+            active_perms=active_perms,
+        )
 
     return render_template(
         "settings/permissions.html",

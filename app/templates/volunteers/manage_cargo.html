@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="manage-cargo-content">
 <div class="page-header">
     <div class="d-flex align-items-center gap-2">
-        <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn-icon" title="Volver">
+        <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn-icon" title="Volver" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
             <span class="material-symbols-outlined">arrow_back</span>
         </a>
         <div>
@@ -16,7 +17,7 @@
 <div style="max-width: 600px;">
     <div class="card shadow-sm">
         <div class="card-body">
-            <form method="POST">
+            <form method="POST" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                     {{ form.nombre_cargo.label(class="form-label") }}
@@ -34,10 +35,11 @@
                 </div>
                 <div class="mt-4" style="margin-top: 20px;">
                     {{ form.submit(class="btn btn-primary") }}
-                    <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn" style="margin-left: 10px; color: #666;">Cancelar</a>
+                    <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn" style="margin-left: 10px; color: #666;" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">Cancelar</a>
                 </div>
             </form>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

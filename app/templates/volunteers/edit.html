@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="volunteer-edit-content">
 <div class="page-header">
     <div class="d-flex align-items-center gap-2">
-        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn-icon" title="Volver">
+        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn-icon" title="Volver" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
             <span class="material-symbols-outlined">arrow_back</span>
         </a>
         <div>
@@ -35,7 +36,7 @@
         <div class="card shadow-sm">
             <div class="card-header">Datos Personales e Institucionales</div>
             <div class="card-body">
-                <form action="" method="post">
+                <form action="" method="post" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                     {{ form.hidden_tag() }}
                     
                     <!-- Basic Name Info -->
@@ -103,7 +104,7 @@
 
                     <div style="margin-top: 30px;">
                         {{ form.submit(class="btn btn-primary") }}
-                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn" style="margin-left: 10px; color: #666;">Cancelar</a>
+                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn" style="margin-left: 10px; color: #666;" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -114,7 +115,7 @@
     <div class="card shadow-sm" style="margin-top: 30px;">
         <div class="card-header d-flex justify-content-between align-items-center">
             <span>Historial de Cargos</span>
-            <a href="{{ url_for('volunteers.add_cargo', user_id=user.id) }}" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.85rem;">
+            <a href="{{ url_for('volunteers.add_cargo', user_id=user.id) }}" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.85rem;" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                 Añadir Cargo
             </a>
         </div>
@@ -137,10 +138,10 @@
                         <td>{{ cargo.fecha_termino.strftime('%d-%m-%Y') if cargo.fecha_termino else 'Presente' }}</td>
                         <td style="text-align: right;">
                             <div class="btn-group-action">
-                                <a href="{{ url_for('volunteers.edit_cargo', cargo_id=cargo.id) }}" class="btn-icon" title="Editar">
+                                <a href="{{ url_for('volunteers.edit_cargo', cargo_id=cargo.id) }}" class="btn-icon" title="Editar" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
                                 </a>
-                                <form action="{{ url_for('volunteers.delete_cargo', cargo_id=cargo.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este cargo?');">
+                                <form action="{{ url_for('volunteers.delete_cargo', cargo_id=cargo.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este cargo?');" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                                     <button type="submit" class="btn-icon btn-icon-danger" title="Eliminar">
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
                                     </button>
@@ -158,5 +159,6 @@
             {% endif %}
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

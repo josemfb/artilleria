@@ -1,6 +1,6 @@
 from datetime import date
 
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app import db
@@ -13,6 +13,8 @@ main_bp = Blueprint("main", __name__)
 @main_bp.route("/")
 @login_required
 def index():
+    if request.headers.get("HX-Request"):
+        return render_template("base.html")
     return render_template("base.html")
 
 
@@ -40,6 +42,11 @@ def add_user():
         db.session.add(profile)
         db.session.commit()
         flash(f"Voluntario {user.nombre} {user.apellido1} agregado correctamente.")
+        
+        if request.headers.get("HX-Request"):
+            return redirect(url_for("volunteers.index"))
         return redirect(url_for("volunteers.index"))
 
+    if request.headers.get("HX-Request"):
+        return render_template("add_user.html", form=form)
     return render_template("add_user.html", form=form)

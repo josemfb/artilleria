@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="permissions-content">
 <div class="page-header">
     <h2>Gestión de Permisos</h2>
     <p class="text-muted">Configura los permisos de acceso para cada cargo jerárquico y para los voluntarios sin cargo.</p>
@@ -15,6 +16,10 @@
 
                 {% for cargo in cargos %}
                 <a href="{{ url_for('settings.permissions', cargo_id=cargo.id) }}" 
+                   hx-get="{{ url_for('settings.permissions', cargo_id=cargo.id) }}"
+                   hx-target="#main-content"
+                   hx-select="#main-content"
+                   hx-swap="outerHTML"
                    class="list-group-item list-group-item-action {% if selected_cargo and selected_cargo.id == cargo.id %}active-cargo{% endif %}"
                    style="display: block; padding: 12px 20px; text-decoration: none; color: inherit; border-bottom: 1px solid var(--border-color);">
                    <div style="font-weight: 500;">{{ cargo.nombre }}</div>
@@ -34,7 +39,7 @@
                 </span>
             </div>
             <div class="card-body">
-                <form method="POST">
+                <form method="POST" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                     {% for group_key, group in system_permissions.items() %}
                         <div class="mb-4" style="margin-bottom: 25px;">
                             <h4 style="font-size: 1rem; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-bottom: 15px; color: #555;">
@@ -61,6 +66,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <style>

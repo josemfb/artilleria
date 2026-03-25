@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="volunteer-details-content">
 <div class="page-header">
     <div class="d-flex align-items-center gap-2">
-        <a href="{{ url_for('volunteers.index') }}" class="btn-icon" title="Volver">
+        <a href="{{ url_for('volunteers.index') }}" class="btn-icon" title="Volver" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
             <span class="material-symbols-outlined">arrow_back</span>
         </a>
         <div>
@@ -14,7 +15,7 @@
     
     {% if current_user.has_permission('volunteers.add_volunteer') %}
     <div>
-        <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn btn-primary">Editar voluntario</a>
+        <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn btn-primary" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">Editar voluntario</a>
     </div>
     {% endif %}
 </div>
@@ -206,5 +207,6 @@
         {% endif %}
         
     </div>
+</div>
 </div>
 {% endblock %}

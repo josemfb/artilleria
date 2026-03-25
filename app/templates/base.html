@@ -6,6 +6,7 @@
     <title>Quintanet - Quinta Compañía</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200,1" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
   </head>
   <body>
     <!-- Top Navbar -->
@@ -34,7 +35,7 @@
     <div class="layout-container">
         <!-- Left Sidebar -->
         {% if current_user.is_authenticated %}
-        <aside class="sidebar">
+        <aside class="sidebar" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
             <div class="accordion-item">
                 <a href="{{ url_for('main.index') }}" class="sidebar-link">
                     <span class="material-symbols-outlined">home</span><span>Inicio</span>
@@ -169,7 +170,7 @@
         {% endif %}
 
         <!-- Content Area -->
-        <main class="main-content">
+        <main class="main-content" id="main-content" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
             {% with messages = get_flashed_messages() %}
               {% if messages %}
                 {% for message in messages %}
