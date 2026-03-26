@@ -162,6 +162,20 @@ class HojaServicio(db.Model):
 
         return (years, months, days)
 
+    @property
+    def display_antiguedad(self):
+        if not self.fecha_alta:
+            return None
+        y, m, d = self.antiguedad
+        return f"{y} años, {m} meses, {d} días"
+
+    @property
+    def display_antiguedad_short(self):
+        if not self.fecha_alta:
+            return None
+        y, _, _ = self.antiguedad
+        return f"{y} años"
+
 
 class AltaAnterior(db.Model):
     __tablename__ = "altas_anteriores"

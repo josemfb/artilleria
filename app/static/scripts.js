@@ -129,6 +129,7 @@ function cancelPersonalDataEdit() {
     const tabActions = document.getElementById('datos-tab-actions');
     tabActions.innerHTML = `
         <button class="btn btn-primary" id="edit-personal-data-btn" onclick="enablePersonalDataEdit()">Editar datos personales</button>
+        <button class="btn btn-primary" onclick="showAddAltaAnteriorForm()">Añadir alta anterior</button>
     `;
 }
 

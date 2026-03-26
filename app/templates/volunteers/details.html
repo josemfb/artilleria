@@ -12,13 +12,7 @@
         <div>
             <h2>{{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</h2>
             <p class="text-muted volunteer-subtitle">
-                {% if user.profile and user.profile.cargo_actual %}
-                    {{ user.profile.cargo_actual }}
-                {% elif user.profile and user.profile.categoria %}
-                    {{ user.profile.categoria }}
-                {% else %}
-                    Voluntario
-                {% endif %}
+                {{ user.institutional_label }}
             </p>
         </div>
     </div>
@@ -58,7 +52,7 @@
                             <!-- Right Column: Other Personal Data -->
                             <div class="volunteer-details-col-8">
                                 <!-- Display mode -->
-                                <div id="personal-data-display">
+                                <div id="personal-data-display" class="{% if inline_form.errors %}hidden{% endif %}">
                                     <div class="personal-data-grid">
                                         
                                         <div>
@@ -80,12 +74,8 @@
                                         
                                         <div>
                                             <label class="form-label">Antigüedad</label>
-                                            <div>
-                                                {% if user.profile.antiguedad %}
-                                                    {{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días
-                                                {% else %}
-                                                    <span class="text-muted">-</span>
-                                                {% endif %}
+                                            <div id="display-antiguedad">
+                                                {{ user.profile.display_antiguedad if user.profile and user.profile.display_antiguedad else '-' }}
                                             </div>
                                         </div>
                                         
@@ -141,8 +131,8 @@
                                 </div>
 
                                 <!-- Edit mode -->
-                                <div id="personal-data-edit" class="hidden">
-                                    <form id="inline-edit-form" method="POST" action="{{ url_for('volunteers.inline_edit_personal_data', user_id=user.id) }}" hx-post="{{ url_for('volunteers.inline_edit_personal_data', user_id=user.id) }}" hx-target="#volunteer-details-content" hx-swap="outerHTML"
+                                <div id="personal-data-edit" class="{% if not inline_form.errors %}hidden{% endif %}">
+                                    <form id="inline-edit-form" method="POST" action="{{ url_for('volunteers.inline_edit_personal_data', user_id=user.id) }}" hx-post="{{ url_for('volunteers.inline_edit_personal_data', user_id=user.id) }}" hx-target="#volunteer-details-content" hx-select="#volunteer-details-content" hx-swap="outerHTML"
                                           data-fecha-nacimiento="{{ user.profile.fecha_nacimiento.strftime('%Y-%m-%d') if user.profile.fecha_nacimiento else '' }}"
                                           data-ocupacion="{{ user.profile.ocupacion or '' }}"
                                           data-telefono="{{ user.profile.telefono or '' }}"
@@ -288,8 +278,13 @@
                         
                         {% if current_user.has_permission('volunteers.add_volunteer') %}
                         <div class="tab-actions" id="datos-tab-actions">
-                            <button class="btn btn-primary" id="edit-personal-data-btn" onclick="enablePersonalDataEdit()">Editar datos personales</button>
-                            <button class="btn btn-primary" onclick="showAddAltaAnteriorForm()">Añadir alta anterior</button>
+                            {% if inline_form.errors %}
+                                <button type="submit" form="inline-edit-form" class="btn btn-success">Guardar cambios</button>
+                                <button type="button" class="btn btn-secondary" onclick="cancelPersonalDataEdit()">Cancelar</button>
+                            {% else %}
+                                <button class="btn btn-primary" id="edit-personal-data-btn" onclick="enablePersonalDataEdit()">Editar datos personales</button>
+                                <button class="btn btn-primary" onclick="showAddAltaAnteriorForm()">Añadir alta anterior</button>
+                            {% endif %}
                         </div>
                         {% endif %}
                         

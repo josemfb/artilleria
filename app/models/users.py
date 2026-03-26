@@ -50,6 +50,34 @@ class Usuario(UserMixin, db.Model):
             pass
         return default_img
 
+    @property
+    def institutional_label(self):
+        """
+        Returns the institutional rank or category label.
+        Prioritizes the active cargo over the volunteer category.
+        """
+        if self.profile:
+            if self.profile.cargo_actual:
+                return self.profile.cargo_actual
+            if self.profile.categoria:
+                return self.profile.categoria
+        return "Voluntario"
+
+    @property
+    def display_rank(self):
+        """Used for UI elements like the navbar. Includes admin status."""
+        if self.is_admin:
+            return "Administrador"
+        return self.institutional_label
+
+    @property
+    def display_cargo(self):
+        return self.profile.cargo_actual if self.profile else None
+
+    @property
+    def display_categoria(self):
+        return self.profile.categoria if self.profile else None
+
     def set_password(self, password):
         self.pass_hash = generate_password_hash(password)
 

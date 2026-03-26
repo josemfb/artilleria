@@ -91,26 +91,13 @@
                         </a>
                     </td>
                     <td>
-                        {% if user.profile and user.profile.categoria %}
-                            {{ user.profile.categoria }}
-                        {% else %}
-                            <span class="text-muted">-</span>
-                        {% endif %}
+                        {{ user.display_categoria if user.display_categoria else '-' }}
                     </td>
                     <td>
-                        {% if user.profile and user.profile.cargo_actual %}
-                            {{ user.profile.cargo_actual }}
-                        {% else %}
-                            <span class="text-muted">-</span>
-                        {% endif %}
+                        {{ user.display_cargo if user.display_cargo else '-' }}
                     </td>
                     <td>
-                        {% if user.profile and user.profile.fecha_alta %}
-                            {% set a = user.profile.antiguedad %}
-                            {{ a[0] }} años
-                        {% else %}
-                            <span class="text-muted">-</span>
-                        {% endif %}
+                        {{ user.profile.display_antiguedad_short if user.profile and user.profile.display_antiguedad_short else '-' }}
                     </td>
                 </tr>
                 {% else %}
