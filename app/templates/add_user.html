@@ -2,10 +2,10 @@
 
 {% block content %}
 <div id="add-user-content">
-<div class="login-container" style="max-width: 600px;">
-    <div class="card shadow-sm" style="text-align: left;">
+<div class="login-container wide">
+    <div class="card shadow-sm text-left">
         <div class="card-header">
-            <h2 style="margin: 0; font-size: 1.25rem; color: var(--primary-green);">Registrar Nuevo Voluntario</h2>
+            <h2 class="page-title">Registrar Nuevo Voluntario</h2>
         </div>
         <div class="card-body">
             <form action="" method="post" novalidate hx-boost="true" hx-target="#main-content" hx-swap="outerHTML">
@@ -30,12 +30,12 @@
                 </div>
 
                 <div class="d-flex gap-2">
-                    <div class="form-group" style="flex: 1;">
+                    <div class="form-group flex-1">
                         {{ form.apellido1.label(class="form-label") }}
                         {{ form.apellido1(class="form-control" + (" is-invalid" if form.apellido1.errors else "")) }}
                         {% for error in form.apellido1.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                     </div>
-                    <div class="form-group" style="flex: 1;">
+                    <div class="form-group flex-1">
                         {{ form.apellido2.label(class="form-label") }}
                         {{ form.apellido2(class="form-control" + (" is-invalid" if form.apellido2.errors else "")) }}
                         {% for error in form.apellido2.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}

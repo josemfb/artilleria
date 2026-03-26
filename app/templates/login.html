@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="login-container">
-    <div class="card shadow-sm" style="text-align: left;">
+    <div class="card shadow-sm text-left">
         <div class="card-header">
-            <h2 style="margin: 0; font-size: 1.5rem; color: var(--primary-green);">Iniciar Sesión</h2>
+            <h2 class="login-title">Iniciar Sesión</h2>
         </div>
         <div class="card-body">
             <form action="" method="post" novalidate hx-boost="false">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group d-flex align-items-center gap-2">
                     {{ form.remember_me() }}
-                    {{ form.remember_me.label(style="margin-bottom: 0; font-weight: normal; text-transform: none; cursor: pointer;") }}
+                    {{ form.remember_me.label(class="checkbox-label") }}
                 </div>
                 {{ form.submit(class="btn btn-primary btn-block") }}
             </form>

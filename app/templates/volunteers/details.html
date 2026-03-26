@@ -11,7 +11,7 @@
         </a>
         <div>
             <h2>{{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</h2>
-            <p class="text-muted" style="margin-bottom: 0;">
+            <p class="text-muted volunteer-subtitle">
                 {% if user.profile and user.profile.cargo_actual %}
                     {{ user.profile.cargo_actual }}
                 {% elif user.profile and user.profile.categoria %}
@@ -23,12 +23,7 @@
         </div>
     </div>
         
-        {% if current_user.has_permission('volunteers.add_volunteer') %}
-        <div style="margin-left: auto;">
-            <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn btn-primary" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">Editar voluntario</a>
         </div>
-        {% endif %}
-    </div>
 </div>
 
 <div class="volunteer-details-container">
@@ -65,13 +60,27 @@
                                 <div class="personal-data-grid">
                                     
                                     <div>
-                                        <label class="form-label">Fecha de Alta</label>
+                                        <label class="form-label">
+                                            {% if user.profile.altas_anteriores %}
+                                                Fecha de Última Alta
+                                            {% else %}
+                                                Fecha de Alta
+                                            {% endif %}
+                                        </label>
                                         <div>
                                             {% if user.profile.fecha_alta %}
                                                 {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
-                                                <small class="text-muted">
-                                                    ({{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días)
-                                                </small>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="form-label">Antigüedad</label>
+                                        <div>
+                                            {% if user.profile.antiguedad %}
+                                                {{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días
                                             {% else %}
                                                 <span class="text-muted">-</span>
                                             {% endif %}
@@ -121,25 +130,56 @@
                                         <div>{{ user.profile.cargo_actual }}</div>
                                     </div>
                                     {% endif %}
-
-                                    <div class="full-width">
+                                    
+                                    <div>
                                         <label class="form-label">Dirección</label>
                                         <div>{{ user.profile.direccion or '-' }}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Altas Anteriores -->
+                        {% if user.profile.altas_anteriores %}
+                        <h5 class="volunteer-section-title">Altas Anteriores</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Fecha de Alta</th>
+                                    <th>Fecha Baja</th>
+                                    <th>Motivo</th>
+                                    <th>Días servidos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alta in user.profile.altas_anteriores|sort(attribute='fecha_alta', reverse=True) %}
+                                <tr>
+                                    <td>{{ alta.fecha_alta.strftime('%d-%m-%Y') if alta.fecha_alta else '-' }}</td>
+                                    <td>{{ alta.fecha_baja.strftime('%d-%m-%Y') if alta.fecha_baja else '-' }}</td>
+                                    <td>{{ alta.motivo_baja or '-' }}</td>
+                                    <td>{{ alta.total_dias or 0 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                        
+                        {% if current_user.has_permission('volunteers.add_volunteer') %}
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" disabled>Editar datos personales</button>
+                            <button class="btn btn-primary" disabled>Editar altas anteriores</button>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <!-- Noches de Guardia Tab -->
                     {% if show_full %}
                     <div class="tab-pane" id="guardias">
-                        <div class="text-center text-muted py-5">
-                            <p class="mt-3">No hay información de noches de guardia disponible.</p>
+                        <p class="text-muted">No registra noches de guardia.</p>
+                        <div class="tab-actions">
                         </div>
                     </div>
-                    {% endif %}
-
+                    {% endif %}                        
                     <!-- Cargos Tab -->
                     {% if show_full %}
                     <div class="tab-pane" id="cargos">
@@ -165,8 +205,13 @@
                         {% else %}
                         <p class="text-muted">No registra cargos.</p>
                         {% endif %}
-                    {% endif %}
-
+                        {% if current_user.has_permission('volunteers.add_volunteer') %}
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" disabled>Editar cargos</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}                        
                     <!-- Asistencias Tab -->
                     {% if show_full %}
                     <div class="tab-pane" id="asistencias">
@@ -192,16 +237,18 @@
                                         {% else %}
                                             -
                                         {% endif %}
-                                    </td>
+                                        </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                         {% else %}
                         <p class="text-muted">No registra asistencias.</p>
+                        <div class="tab-actions">
+                        </div>
                         {% endif %}
-                    {% endif %}
-
+                    </div>
+                    {% endif %}                        
                     <!-- Premios Tab -->
                     {% if show_full %}
                     <div class="tab-pane" id="premios">
@@ -224,11 +271,10 @@
                         </table>
                         {% else %}
                         <p class="text-muted">No registra premios.</p>
-                        {% endif %}
-
+                        {% endif %}                        
                         <!-- Competencias -->
                         {% if user.profile.competencias %}
-                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Competencias</h5>
+                        <h5 class="volunteer-section-title">Competencias</h5>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -248,117 +294,100 @@
                             </tbody>
                         </table>
                         {% endif %}
-                    {% endif %}
-
+                        {% if current_user.has_permission('volunteers.add_volunteer') %}
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" disabled>Editar premios</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}                        
                     <!-- Anotaciones Tab -->
                     {% if show_full %}
                     <div class="tab-pane" id="anotaciones">
-                        <!-- Cursos -->
-                        {% if user.profile.cursos %}
-                        <ul style="list-style: none; padding-left: 0;" class="mb-4">
-                            {% for curso in user.profile.cursos|sort(attribute='fecha', reverse=True) %}
-                            <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span>{{ curso.nombre_curso }}</span>
-                                <span class="text-muted">{{ curso.fecha }}</span>
-                            </li>
+                        {% set all_annotations = [] %}
+
+                        <!-- Collect Operadores -->
+                        {% for operador in user.profile.operadores|sort(attribute='fecha_autorizacion', reverse=true) %}
+                            {% set annotation = {
+                                'year': operador.fecha_autorizacion.strftime('%Y-%m-%d') if operador.fecha_autorizacion else '',
+                                'type': 'Material mayor',
+                                'text': (operador.maquina or '') ~ ' - ' ~ (operador.nivel or ''),
+                                'sort_key': '1_' ~ (operador.fecha_autorizacion.strftime('%Y-%m-%d') if operador.fecha_autorizacion else '') ~ '_' ~ (operador.maquina or '') ~ (operador.nivel or ''),
+                                'color_class': 'chip-orange'
+                            } %}
+                            {% set _ = all_annotations.append(annotation) %}
+                        {% endfor %}
+                      
+                        <!-- Collect Competencias -->
+                        {% for competencia in user.profile.competencias|sort(attribute='fecha', reverse=true) %}
+                            {% set annotation = {
+                                'year': competencia.fecha,
+                                'type': 'Competencia',
+                                'text': competencia.nombre_competencia,
+                                'sort_key': '2_' ~ competencia.fecha ~ '_' ~ competencia.nombre_competencia,
+                                'color_class': 'chip-purple'
+                            } %}
+                            {% set _ = all_annotations.append(annotation) %}
+                        {% endfor %}
+                        
+                        <!-- Collect Cursos -->
+                        {% for curso in user.profile.cursos|sort(attribute='fecha', reverse=true) %}
+                            {% set annotation = {
+                                'year': curso.fecha,
+                                'type': 'Curso',
+                                'text': curso.nombre_curso,
+                                'sort_key': '3_' ~ curso.fecha ~ '_' ~ curso.nombre_curso,
+                                'color_class': 'chip-blue'
+                            } %}
+                            {% set _ = all_annotations.append(annotation) %}
+                        {% endfor %}
+                        
+                        <!-- Collect Niveles Académicos -->
+                        {% for nivel in user.profile.niveles_academicos|sort(attribute='fecha', reverse=true) %}
+                            {% set annotation = {
+                                'year': nivel.fecha,
+                                'type': 'Nivel académico',
+                                'text': nivel.nivel,
+                                'sort_key': '4_' ~ nivel.fecha ~ '_' ~ nivel.nivel,
+                                'color_class': 'chip-light-blue'
+                            } %}
+                            {% set _ = all_annotations.append(annotation) %}
+                        {% endfor %}
+                        
+                        <!-- Collect Otras Anotaciones -->
+                        {% for anotacion in user.profile.otras_anotaciones|sort(attribute='fecha', reverse=true) %}
+                            {% set annotation = {
+                                'year': anotacion.fecha,
+                                'type': 'Otro',
+                                'text': anotacion.texto_anotacion,
+                                'sort_key': '5_' ~ anotacion.fecha ~ '_' ~ anotacion.texto_anotacion,
+                                'color_class': 'chip-green'
+                            } %}
+                            {% set _ = all_annotations.append(annotation) %}
+                        {% endfor %}
+                        
+                        <!-- Display unified list -->
+                        {% if all_annotations %}
+                        <div class="annotations-list">
+                            {% for annotation in all_annotations|sort(attribute='sort_key', reverse=true) %}
+                            <div class="annotation-item">
+                                <div class="annotation-header">
+                                    <span class="annotation-year">{{ annotation.year }}</span>
+                                    <span class="annotation-type {{ annotation.color_class }}">{{ annotation.type }}</span>
+                                </div>
+                                <div class="annotation-text">{{ annotation.text }}</div>
+                            </div>
                             {% endfor %}
-                        </ul>
+                        </div>
                         {% else %}
-                        <p class="text-muted mb-4">No registra cursos.</p>
+                        <p class="text-muted">No registra otras anotaciones.</p>
                         {% endif %}
-
-                        <!-- Niveles Académicos -->
-                        {% if user.profile.niveles_academicos %}
-                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Niveles Académicos</h5>
-                        <table class="table table-sm mb-4">
-                            <thead>
-                                <tr>
-                                    <th>Nivel</th>
-                                    <th>Año</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for nivel in user.profile.niveles_academicos|sort(attribute='fecha', reverse=True) %}
-                                <tr>
-                                    <td>{{ nivel.nivel }}</td>
-                                    <td>{{ nivel.fecha }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        {% if current_user.has_permission('volunteers.add_volunteer') %}
+                        <div class="tab-actions">
+                            <button class="btn btn-primary" disabled>Editar anotaciones</button>
+                        </div>
                         {% endif %}
-
-                        <!-- Operadores -->
-                        {% if user.profile.operadores %}
-                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Operadores de Máquinas</h5>
-                        <table class="table table-sm mb-4">
-                            <thead>
-                                <tr>
-                                    <th>Máquina</th>
-                                    <th>Nivel</th>
-                                    <th>Fecha Autorización</th>
-                                    <th>Comentario</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for operador in user.profile.operadores|sort(attribute='fecha_autorizacion', reverse=True) %}
-                                <tr>
-                                    <td>{{ operador.maquina or '-' }}</td>
-                                    <td>{{ operador.nivel or '-' }}</td>
-                                    <td>{{ operador.fecha_autorizacion.strftime('%d-%m-%Y') if operador.fecha_autorizacion else '-' }}</td>
-                                    <td>{{ operador.comentario or '-' }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endif %}
-
-                        <!-- Otras Anotaciones -->
-                        {% if user.profile.otras_anotaciones %}
-                        <table class="table table-sm mb-4">
-                            <thead>
-                                <tr>
-                                    <th>Año</th>
-                                    <th>Anotación</th>
-                                    <th>Comentario</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for anotacion in user.profile.otras_anotaciones|sort(attribute='fecha', reverse=True) %}
-                                <tr>
-                                    <td>{{ anotacion.fecha }}</td>
-                                    <td>{{ anotacion.texto_anotacion }}</td>
-                                    <td>{{ anotacion.comentario or '-' }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endif %}
-
-                        <!-- Altas Anteriores -->
-                        {% if user.profile.altas_anteriores %}
-                        <h5 style="color: var(--primary-green); border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 30px;">Altas Anteriores</h5>
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Fecha Alta</th>
-                                    <th>Fecha Baja</th>
-                                    <th>Motivo</th>
-                                    <th>Días servidos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for alta in user.profile.altas_anteriores %}
-                                <tr>
-                                    <td>{{ alta.fecha_alta.strftime('%d-%m-%Y') if alta.fecha_alta else '-' }}</td>
-                                    <td>{{ alta.fecha_baja.strftime('%d-%m-%Y') if alta.fecha_baja else '-' }}</td>
-                                    <td>{{ alta.motivo_baja or '-' }}</td>
-                                    <td>{{ alta.total_dias or 0 }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endif %}
+                    </div>
                     {% endif %}
                 </div>
             </div>

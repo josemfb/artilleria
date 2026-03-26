@@ -19,10 +19,10 @@
                 <table class="table table-hover table-compact mb-0">
                     <thead>
                         <tr>
-                            <th style="width: 50px;" class="text-center">#</th>
+                            <th class="width-50 text-center">#</th>
                             <th>Nombre del Cargo</th>
-                            <th style="width: 150px;">Categoría</th>
-                            <th style="width: 140px; text-align: right;">Acciones</th>
+                            <th class="width-150">Categoría</th>
+                            <th class="width-140 text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,9 +35,9 @@
                                     {{ cargo.nombre }}
                                 </div>
                                 <!-- Edit Mode (Hidden by default) -->
-                                <form id="edit-form-{{ cargo.id }}" action="{{ url_for('settings.edit_cargo', id=cargo.id) }}" method="POST" style="display: none;" class="d-flex align-items-center gap-2" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-                                    <input type="text" name="nombre" value="{{ cargo.nombre }}" class="form-control py-1 px-2" style="height: 32px; font-size: 0.9rem;" required>
-                                    <button type="submit" class="btn-icon" title="Guardar" style="color: var(--primary-green);"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg></button>
+                                <form id="edit-form-{{ cargo.id }}" action="{{ url_for('settings.edit_cargo', id=cargo.id) }}" method="POST" class="edit-form d-flex align-items-center gap-2" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
+                                    <input type="text" name="nombre" value="{{ cargo.nombre }}" class="form-control py-1 px-2 edit-input" required>
+                                    <button type="submit" class="btn-icon btn-save" title="Guardar"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg></button>
                                     <button type="button" class="btn-icon" title="Cancelar" onclick="toggleEdit('{{ cargo.id }}')"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg></button>
                                 </form>
                             </td>
@@ -45,15 +45,15 @@
                                 <div id="view-cat-{{ cargo.id }}">
                                     {{ cargo.categoria }}
                                 </div>
-                                <div id="edit-cat-{{ cargo.id }}" style="display: none;">
-                                    <select name="categoria" form="edit-form-{{ cargo.id }}" class="form-control py-1 px-2" style="height: 32px; font-size: 0.9rem;">
+                                <div id="edit-cat-{{ cargo.id }}" class="edit-category">
+                                    <select name="categoria" form="edit-form-{{ cargo.id }}" class="form-control py-1 px-2 edit-select">
                                         {% for cat in categorias %}
                                         <option value="{{ cat }}" {% if cargo.categoria == cat %}selected{% endif %}>{{ cat }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </td>
-                            <td style="text-align: right;">
+                            <td class="text-right">
                                 <div class="btn-group-action">
                                     <form action="{{ url_for('settings.move_cargo', id=cargo.id, direction='up') }}" method="POST" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
                                         <button type="submit" class="btn-icon" title="Subir prioridad" {% if loop.first %}disabled{% endif %}>

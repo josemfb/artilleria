@@ -366,6 +366,94 @@ a {
     display: block;
 }
 
+/* Tab Actions */
+.tab-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.tab-actions .btn {
+    font-size: 0.875rem;
+    padding: 8px 16px;
+}
+
+/* Annotations List */
+.annotations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.annotation-item {
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: box-shadow 0.2s ease;
+}
+
+.annotation-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.annotation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 12px;
+}
+
+.annotation-year {
+    font-weight: 600;
+    color: var(--off-black);
+    font-size: 0.9rem;
+}
+
+.annotation-type {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Chip Colors */
+.chip-orange {
+    background-color: #ff9800;
+    color: white;
+}
+
+.chip-blue {
+    background-color: #2196f3;
+    color: white;
+}
+
+.chip-light-blue {
+    background-color: #03a9f4;
+    color: white;
+}
+
+.chip-green {
+    background-color: #4caf50;
+    color: white;
+}
+
+.chip-purple {
+    background-color: #9c27b0;
+    color: white;
+}
+
+.annotation-text {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
 #volunteer-details-content .personal-data-grid {
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
@@ -665,6 +753,227 @@ a {
     min-width: 280px;
 }
 
+/* Table specific styles for settings */
+.table th.width-50 {
+    width: 50px;
+}
+
+.table th.width-150 {
+    width: 150px;
+}
+
+.table th.width-140 {
+    width: 140px;
+}
+
+.table th.text-right {
+    text-align: right;
+}
+
+.table td.text-right {
+    text-align: right;
+}
+
+/* Edit form styles */
+.edit-form {
+    display: none;
+}
+
+.edit-form.show {
+    display: flex;
+}
+
+.edit-input {
+    height: 32px;
+    font-size: 0.9rem;
+}
+
+.edit-select {
+    height: 32px;
+    font-size: 0.9rem;
+}
+
+.btn-icon.btn-save {
+    color: var(--primary-green);
+}
+
+.edit-category {
+    display: none;
+}
+
+.edit-category.show {
+    display: block;
+}
+
+/* Permissions page styles */
+.cargo-name {
+    font-weight: 500;
+}
+
+.perm-section {
+    margin-bottom: 25px;
+}
+
+.perm-section h4 {
+    font-size: 1rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.perm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.perm-label {
+    cursor: pointer;
+}
+
+.perm-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-green);
+}
+
+.perm-submit-section {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.active-cargo {
+    background-color: #e8f5e9 !important;
+    border-left: 4px solid var(--primary-green) !important;
+}
+
+.selected-cargo {
+    color: var(--primary-green);
+}
+
+/* Volunteer details page styles */
+.volunteer-subtitle {
+    margin-bottom: 0;
+}
+
+.volunteer-profile-small {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+}
+
+.sort-icon-hidden {
+    visibility: hidden;
+}
+
+/* Volunteer edit page styles */
+.volunteer-edit-subtitle {
+    margin-bottom: 0;
+}
+
+.volunteer-edit-profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.volunteer-edit-name {
+    margin: 0 0 5px 0;
+}
+
+.form-section-title {
+    color: var(--primary-green);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Volunteer list page styles */
+.volunteer-list-header {
+    justify-content: space-between;
+}
+
+.volunteer-list-subtitle {
+    margin-bottom: 0;
+}
+
+.volunteer-list-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+}
+
+/* Manage cargo page styles */
+.manage-cargo-subtitle {
+    margin-bottom: 0;
+}
+
+.manage-cargo-container {
+    max-width: 600px;
+}
+
+.manage-cargo-submit {
+    margin-top: 20px;
+}
+
+.btn-cancel {
+    margin-left: 10px;
+    color: #666;
+}
+
+/* Remaining inline style fixes */
+.table th.width-60 {
+    width: 60px;
+}
+
+.table th.width-100 {
+    width: 100px;
+}
+
+.table td.text-right {
+    text-align: right;
+}
+
+.volunteer-section-title {
+    color: var(--primary-green);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-top: 30px;
+}
+
+.volunteer-submit-section {
+    margin-top: 30px;
+}
+
+.volunteer-history-card {
+    margin-top: 30px;
+}
+
+.btn-small {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+}
+
+/* Tab Actions button spacing */
+.tab-actions .btn {
+    margin-right: 8px;
+}
+
+.tab-actions .btn:last-child {
+    margin-right: 0;
+}
+
 /* ==========================================================================
    Utilities
    ========================================================================== */
@@ -899,6 +1208,37 @@ a {
     max-width: 400px;
     margin: 40px auto;
     text-align: center;
+}
+
+.login-container.wide {
+    max-width: 600px;
+}
+
+.card.text-left {
+    text-align: left;
+}
+
+.card-header h2.page-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--primary-green);
+}
+
+.card-header h2.login-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--primary-green);
+}
+
+.form-group.flex-1 {
+    flex: 1;
+}
+
+.checkbox-label {
+    margin-bottom: 0;
+    font-weight: normal;
+    text-transform: none;
+    cursor: pointer;
 }
 
 /* ==========================================================================
