@@ -2,8 +2,9 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 from flask_login import current_user, login_required
 
 from app import db
-from app.forms import CargoForm, EditVolunteerForm, InlineEditPersonalDataForm
-from app.models import Cargo, Usuario
+from app.forms import CargoForm, EditVolunteerForm, InlineEditPersonalDataForm, AltaAnteriorForm
+from app.models import Cargo, Usuario, AltaAnterior
+from app.models.hojas_servicio import MOTIVOS_BAJA
 
 volunteers_bp = Blueprint("volunteers", __name__, url_prefix="/voluntarios")
 
@@ -40,7 +41,7 @@ def index():
 
     users.sort(key=get_sort_key, reverse=reverse)
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
         return render_template(
             "volunteers/list.html",
             users=users,
@@ -69,18 +70,20 @@ def details(user_id):
     # Create inline edit form for personal data
     inline_form = InlineEditPersonalDataForm()
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
         return render_template(
             "volunteers/details.html",
             user=user,
             show_full=show_full,
             inline_form=inline_form,
+            motivos_baja=MOTIVOS_BAJA,
         )
     return render_template(
         "volunteers/details.html",
         user=user,
         show_full=show_full,
         inline_form=inline_form,
+        motivos_baja=MOTIVOS_BAJA,
     )
 
 
@@ -119,7 +122,7 @@ def edit_volunteer(user_id):
         db.session.commit()
         flash("Información actualizada correctamente.", "success")
 
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             return render_template("volunteers/details.html", user=user, show_full=True)
 
         return redirect(url_for("volunteers.details", user_id=user.id))
@@ -141,7 +144,7 @@ def edit_volunteer(user_id):
             form.fecha_baja.data = user.profile.fecha_baja
             form.motivo_baja.data = user.profile.motivo_baja
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
         return render_template("volunteers/edit.html", form=form, user=user)
 
     return render_template("volunteers/edit.html", form=form, user=user)
@@ -151,7 +154,7 @@ def edit_volunteer(user_id):
 @login_required
 def inline_edit_personal_data(user_id):
     if not current_user.has_permission("volunteers.add_volunteer"):
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             return (
                 jsonify({"error": "No tienes permiso para realizar esta acción."}),
                 403,
@@ -161,7 +164,7 @@ def inline_edit_personal_data(user_id):
 
     user = db.session.get(Usuario, user_id)
     if not user:
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             return jsonify({"error": "Voluntario no encontrado."}), 404
         flash("Voluntario no encontrado.", "error")
         return redirect(url_for("volunteers.index"))
@@ -182,7 +185,7 @@ def inline_edit_personal_data(user_id):
         flash("Datos personales actualizados correctamente.", "success")
 
         # Handle HTMX requests
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             # Return updated data for the display fields
             response_data = {
                 "fecha_nacimiento": (
@@ -206,7 +209,7 @@ def inline_edit_personal_data(user_id):
 
     else:
         # Form validation failed
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             return (
                 jsonify(
                     {
@@ -251,7 +254,7 @@ def add_cargo(user_id):
         db.session.commit()
         flash("Cargo agregado correctamente.", "success")
 
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             # Re-render edit page content to show new cargo
             edit_form = EditVolunteerForm()
             # We need to re-populate the edit form data so it doesn't show empty fields
@@ -272,7 +275,7 @@ def add_cargo(user_id):
 
         return redirect(url_for("volunteers.edit_volunteer", user_id=user_id))
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
         return render_template(
             "volunteers/manage_cargo.html", form=form, title="Añadir Cargo", user=user
         )
@@ -304,7 +307,7 @@ def edit_cargo(cargo_id):
         db.session.commit()
         flash("Cargo actualizado correctamente.", "success")
 
-        if request.headers.get("HX-Request"):
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
             # Re-render edit page content
             edit_form = EditVolunteerForm()
             edit_form.nombre.data = user.nombre
@@ -329,7 +332,7 @@ def edit_cargo(cargo_id):
         form.fecha_inicio.data = cargo.fecha_inicio
         form.fecha_termino.data = cargo.fecha_termino
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
         return render_template(
             "volunteers/manage_cargo.html", form=form, title="Editar Cargo", user=user
         )
@@ -357,7 +360,7 @@ def delete_cargo(cargo_id):
     db.session.commit()
     flash("Cargo eliminado correctamente.", "success")
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
         # Re-render edit page content
         edit_form = EditVolunteerForm()
         edit_form.nombre.data = user.nombre
@@ -376,3 +379,141 @@ def delete_cargo(cargo_id):
         return render_template("volunteers/edit.html", form=edit_form, user=user)
 
     return redirect(url_for("volunteers.edit_volunteer", user_id=user_id))
+
+
+@volunteers_bp.route("/<int:user_id>/altas-anteriores/add", methods=["GET", "POST"])
+@login_required
+def add_alta_anterior(user_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.", "error")
+        return redirect(url_for("volunteers.details", user_id=user_id))
+
+    user = db.session.get(Usuario, user_id)
+    if not user:
+        flash("Voluntario no encontrado.", "error")
+        return redirect(url_for("volunteers.index"))
+
+    form = AltaAnteriorForm()
+    
+    if form.validate_on_submit():
+        new_alta = AltaAnterior(
+            hoja_id=user.profile.id,
+            fecha_alta=form.fecha_alta.data,
+            registro_general=form.registro_general.data,
+            registro_quinta=form.registro_quinta.data,
+            fecha_baja=form.fecha_baja.data or None,
+            motivo_baja=form.motivo_baja.data or None,
+        )
+        db.session.add(new_alta)
+        db.session.commit()
+        flash("Alta anterior agregada correctamente.", "success")
+
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
+            # Return only the updated sections
+            return render_template("volunteers/altas_anteriores_partial.html", user=user, show_full=True, motivos_baja=MOTIVOS_BAJA)
+
+        return redirect(url_for("volunteers.details", user_id=user.id))
+
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
+        return render_template(
+            "volunteers/alta_anterior_form_partial.html", 
+            form=form, 
+            user=user,
+            action_url=url_for('volunteers.add_alta_anterior', user_id=user_id)
+        )
+
+    return render_template(
+        "volunteers/manage_alta_anterior.html", 
+        form=form, 
+        title="Añadir Alta Anterior", 
+        user=user,
+        action_url=url_for('volunteers.add_alta_anterior', user_id=user_id)
+    )
+
+
+@volunteers_bp.route("/altas-anteriores/edit/<int:alta_id>", methods=["GET", "POST"])
+@login_required
+def edit_alta_anterior(alta_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.", "error")
+        return redirect(url_for("volunteers.index"))
+
+    alta = db.session.get(AltaAnterior, alta_id)
+    if not alta:
+        flash("Alta anterior no encontrada.", "error")
+        return redirect(url_for("volunteers.index"))
+
+    user = alta.hoja.user
+    form = AltaAnteriorForm()
+
+    if form.validate_on_submit():
+        alta.fecha_alta = form.fecha_alta.data
+        alta.registro_general = form.registro_general.data
+        alta.registro_quinta = form.registro_quinta.data
+        alta.fecha_baja = form.fecha_baja.data or None
+        alta.motivo_baja = form.motivo_baja.data or None
+        db.session.commit()
+        flash("Alta anterior actualizada correctamente.", "success")
+
+        if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
+            # Return only the updated sections
+            return render_template("volunteers/altas_anteriores_partial.html", user=user, show_full=True, motivos_baja=MOTIVOS_BAJA)
+
+        return redirect(url_for("volunteers.details", user_id=user.id))
+
+    elif request.method == "GET":
+        form.fecha_alta.data = alta.fecha_alta
+        form.registro_general.data = alta.registro_general
+        form.registro_quinta.data = alta.registro_quinta
+        form.fecha_baja.data = alta.fecha_baja
+        form.motivo_baja.data = alta.motivo_baja
+
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
+        return render_template(
+            "volunteers/alta_anterior_form_partial.html", 
+            form=form, 
+            user=user,
+            action_url=url_for('volunteers.edit_alta_anterior', alta_id=alta_id)
+        )
+
+    return render_template(
+        "volunteers/manage_alta_anterior.html", 
+        form=form, 
+        title="Editar Alta Anterior", 
+        user=user,
+        action_url=url_for('volunteers.edit_alta_anterior', alta_id=alta_id)
+    )
+
+
+@volunteers_bp.route("/altas-anteriores/delete/<int:alta_id>", methods=["POST"])
+@login_required
+def delete_alta_anterior(alta_id):
+    print(f"Delete route called for alta_id: {alta_id}")
+    print(f"Request method: {request.method}")
+    print(f"Request headers: {dict(request.headers)}")
+    print(f"Request form: {request.form}")
+    
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        flash("No tienes permiso para realizar esta acción.", "error")
+        return redirect(url_for("volunteers.index"))
+
+    alta = db.session.get(AltaAnterior, alta_id)
+    print(f"Alta found: {alta}")
+    if not alta:
+        flash("Alta anterior no encontrada.", "error")
+        return redirect(request.referrer or url_for("volunteers.index"))
+
+    user_id = alta.hoja.user_id
+    user = alta.hoja.user
+    print(f"User: {user}")
+    db.session.delete(alta)
+    db.session.commit()
+    print("Alta deleted successfully")
+    flash("Alta anterior eliminada correctamente.", "success")
+
+    if request.headers.get("HX-Request") or request.args.get('htmx') == '1':
+        print("Returning HTMX response")
+        # Return only the updated sections
+        return render_template("volunteers/altas_anteriores_partial.html", user=user, show_full=True, motivos_baja=MOTIVOS_BAJA)
+
+    return redirect(url_for("volunteers.details", user_id=user_id))

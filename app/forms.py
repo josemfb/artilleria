@@ -10,7 +10,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, Email, Optional, ValidationError
 
 from app.models import Usuario
-from app.models.hojas_servicio import CATEGORIAS, MOTIVOS_BAJA, TipoCargo
+from app.models.hojas_servicio import CATEGORIAS, MOTIVOS_BAJA, TipoCargo, AltaAnterior
 from app.utils import validate_and_format_run
 
 
@@ -106,3 +106,16 @@ class CargoForm(FlaskForm):
             (tc.nombre, tc.nombre)
             for tc in TipoCargo.query.order_by(TipoCargo.orden).all()
         ]
+
+
+class AltaAnteriorForm(FlaskForm):
+    fecha_alta = DateField("Fecha de Alta", format="%Y-%m-%d", validators=[DataRequired()])
+    registro_general = StringField("Registro General")
+    registro_quinta = StringField("Registro Quinta")
+    fecha_baja = DateField("Fecha de Baja", format="%Y-%m-%d", validators=[Optional()])
+    motivo_baja = SelectField(
+        "Motivo de Baja",
+        choices=[("", "Seleccione un motivo")] + [(m, m) for m in MOTIVOS_BAJA],
+        validators=[Optional()],
+    )
+    submit = SubmitField("Guardar Alta Anterior")

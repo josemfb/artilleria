@@ -984,6 +984,186 @@ a {
     margin-top: 30px;
 }
 
+.volunteer-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* Altas Anteriores table styling */
+.volunteer-section .table {
+    font-size: 0.875rem;
+}
+
+.volunteer-section .table td {
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+.volunteer-section .table th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Compact action buttons */
+.volunteer-section .btn-group-sm .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volunteer-section .btn-group-sm .btn .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.volunteer-section .btn-group {
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Inline editing for altas anteriores */
+.volunteer-section .display-value {
+    display: block;
+}
+
+.volunteer-section .edit-value {
+    display: none;
+    min-width: 120px;
+}
+
+.volunteer-section .edit-value.form-control-sm {
+    height: 2rem;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.volunteer-section .edit-value.form-select-sm {
+    height: 2rem;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.volunteer-section .btn-success {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volunteer-section .btn-success:hover {
+    background-color: var(--primary-green-hover);
+    border-color: var(--primary-green-border);
+}
+
+.volunteer-section .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volunteer-section .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.volunteer-section .btn-group-sm .btn-success,
+.volunteer-section .btn-group-sm .btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volunteer-section .btn-group form {
+    display: inline;
+    margin: 0;
+}
+
+/* Alta Anterior Form Styling */
+#alta-anterior-form-container .form-label {
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+#alta-anterior-form-container .alta-anterior-form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+#alta-anterior-form-container .alta-anterior-field {
+    flex: 1;
+}
+
+#alta-anterior-form-container .alta-anterior-field-small {
+    flex: 0.8;
+}
+
+#alta-anterior-form-container .form-control,
+#alta-anterior-form-container .form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+#alta-anterior-form-container .form-control:focus,
+#alta-anterior-form-container .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+#alta-anterior-form-container .motivo-baja-select {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    font-weight: 500;
+}
+
+#alta-anterior-form-container .motivo-baja-select:focus {
+    background-color: var(--white);
+    border-color: var(--primary-color);
+}
+
+#alta-anterior-form-container .form-control-sm,
+#alta-anterior-form-container .form-select-sm {
+    height: 2.375rem;
+    font-size: 0.875rem;
+}
+
+#alta-anterior-form-container .text-danger {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+#alta-anterior-form-container .btn {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+#alta-anterior-form-container .alta-anterior-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
 .volunteer-submit-section {
     margin-top: 30px;
 }
