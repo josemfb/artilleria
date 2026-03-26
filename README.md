@@ -7,7 +7,8 @@ En desarrollo.
 
 
 - Python (Flask)
-- En cada archivo:
+- htmx
+- Lint con:
     - `isort .`
     - `black .`
     - `flake8 --extend-exclude '.venv, .idea, .plan' --max-line-length 100 .`
