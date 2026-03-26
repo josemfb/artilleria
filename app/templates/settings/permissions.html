@@ -12,7 +12,7 @@
     <div class="settings-sidebar">
         <div class="card shadow-sm">
             <div class="card-header bg-light">Seleccionar Nivel</div>
-            <div class="list-group list-group-flush">
+            <div class="list-group list-group-flush list-group-compact">
 
                 {% for cargo in cargos %}
                 <a href="{{ url_for('settings.permissions', cargo_id=cargo.id) }}" 
@@ -21,7 +21,7 @@
                    hx-select="#main-content"
                    hx-swap="outerHTML"
                    class="list-group-item list-group-item-action {% if selected_cargo and selected_cargo.id == cargo.id %}active-cargo{% endif %}"
-                   style="display: block; padding: 12px 20px; text-decoration: none; color: inherit; border-bottom: 1px solid var(--border-color);">
+                   >
                    <div style="font-weight: 500;">{{ cargo.nombre }}</div>
                 </a>
                 {% endfor %}

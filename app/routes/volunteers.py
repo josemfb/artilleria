@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 
 from app import db
 from app.forms import CargoForm, EditVolunteerForm
-from app.models import Cargo, TipoCargo, Usuario
+from app.models import Cargo, Usuario
 
 volunteers_bp = Blueprint("volunteers", __name__, url_prefix="/voluntarios")
 
