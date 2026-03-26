@@ -1,5 +1,5 @@
 """
-Registry of system permissions available to be assigned to roles.
+Registro de permisos que pueden ser asignados a los distintos cargos.
 """
 
 SYSTEM_PERMISSIONS = {
@@ -7,8 +7,8 @@ SYSTEM_PERMISSIONS = {
         "label": "Voluntarios",
         "perms": {
             "view_details": "Ver hoja de servicio completa",
-            "add_volunteer": "Crear y modificar voluntarios",
-            "export_data": "Exportar datos",
+            "edit": "Crear y modificar voluntarios",
+            "export": "Exportar datos",
         },
     },
 }

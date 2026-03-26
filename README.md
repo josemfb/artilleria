@@ -8,7 +8,11 @@ En desarrollo.
 
 - Python (Flask)
 - htmx
+
+- Formatear con:
+  - `isort .`
+  - `black .`
+  - `djlint app/templates --profile=jinja --reformat`
 - Lint con:
-    - `isort .`
-    - `black .`
-    - `flake8 --extend-exclude '.venv, .idea, .plan' --max-line-length 100 .`
+  - `flake8 --extend-exclude '.venv, .idea, .plan' --max-line-length 100 .`
+  - `djlint app/templates --profile=jinja`

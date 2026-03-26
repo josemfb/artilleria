@@ -1,203 +1,322 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Quintanet - Quinta Compañía</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200,1" rel="stylesheet">
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-  </head>
-  <body>
-    <!-- Top Navbar -->
-    <nav class="navbar">
-        <div class="navbar-brand" id="navbar-brand-toggle">
-            <!-- Logo Icon -->
-            <span class="material-symbols-outlined">shield</span>
-            <span>Quintanet</span>
-        </div>
-        <div class="navbar-right">
-            {% if current_user.is_authenticated %}
-                <div class="user-menu-container">
-                    <button class="user-menu-toggle">
-                        <div class="user-info">
-                            <span class="user-name">{{ current_user.nombre }} {{ current_user.apellido1 }}</span>
-                            <span class="user-rank">{{ current_user.display_rank }}</span>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Quintanet - Quinta Compañía</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200,1"
+              rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    </head>
+    <body>
+        <!-- Navbar superior -->
+        <nav class="navbar">
+            <div class="navbar-brand" id="navbar-brand-toggle">
+                <span class="material-symbols-outlined">shield</span>
+                <span>Quintanet</span>
+            </div>
+            <div class="navbar-right">
+                {% if current_user.is_authenticated %}
+                    <div class="user-menu-container">
+                        <button class="user-menu-toggle">
+                            <div class="user-info">
+                                <span class="user-name">{{ current_user.nombre }} {{ current_user.apellido1 }}</span>
+                                <span class="user-rank">{{ current_user.display_rank }}</span>
+                            </div>
+                            <img src="{{ url_for('static', filename=current_user.picture) }}"
+                                 class="user-avatar"
+                                 alt="Perfil"
+                                 width="36"
+                                 height="36">
+                        </button>
+                        <div class="user-dropdown">
+                            <div class="user-name-mobile">{{ current_user.nombre }} {{ current_user.apellido1 }}</div>
+                            <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
                         </div>
-                        <img src="{{ url_for('static', filename=current_user.picture) }}" class="user-avatar" alt="Perfil">
-                    </button>
-                    <div class="user-dropdown">
-                        <div class="user-name-mobile">{{ current_user.nombre }} {{ current_user.apellido1 }}</div>
-                        <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
                     </div>
-                </div>
+                {% endif %}
+            </div>
+        </nav>
+        <div class="layout-container">
+            <!-- Menú -->
+            {% if current_user.is_authenticated %}
+                <aside class="sidebar"
+                       hx-boost="true"
+                       hx-target="#main-content"
+                       hx-select="#main-content"
+                       hx-swap="outerHTML">
+                    <div class="accordion-item">
+                        <a href="{{ url_for('main.index') }}" class="sidebar-link">
+                            <span class="material-symbols-outlined">home</span><span>Inicio</span>
+                        </a>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">person</span><span>Perfil</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Hoja de servicio</a>
+                            <a href="#">Premios</a>
+                            <a href="#">Guardia nocturna</a>
+                            <a href="#">Licencias</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">group</span><span>Voluntarios</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="{{ url_for('volunteers.index') }}">Voluntarios</a>
+                            <a href="#">Listas</a>
+                            <a href="#">Oficiales</a>
+                            <a href="#">Registros históricos</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <a href="#" class="sidebar-link">
+                            <span class="material-symbols-outlined">calendar_today</span><span>Actos</span>
+                        </a>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">hotel</span><span>Guardia Nocturna</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Integrantes</a>
+                            <a href="#">Permisos</a>
+                            <a href="#">Jefe de Guardia</a>
+                            <a href="#">Libro de Guardia Nocturna</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">book_2</span><span>Libro de Oficiales</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Agregar anotación</a>
+                            <a href="#">Ver Libro</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <a href="#" class="sidebar-link">
+                            <span class="material-symbols-outlined">event_busy</span><span>Licencias</span>
+                        </a>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">local_atm</span><span>Tesorería</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Ver cuotas</a>
+                            <a href="#">Registrar pagos</a>
+                            <a href="#">Morosos</a>
+                            <a href="#">Condonaciones</a>
+                            <a href="#">Valor cuota</a>
+                            <a href="#">Cuota extraordinaria</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">garage_home</span><span>Cuartel</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Reportar problema</a>
+                            <a href="#">Revisar reportes</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">fire_truck</span><span>Material mayor</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Reportar problema</a>
+                            <a href="#">Revisar reportes</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">history_edu</span><span>Actas</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Sesiones</a>
+                            <a href="#">Memorias</a>
+                            <a href="#">Juntas de Oficiales</a>
+                            <a href="#">Consejos de Disciplina</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">assignment</span><span>Ayudantía</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Cuadro mensual</a>
+                            <a href="#">Parte mensual</a>
+                            <a href="#">Cuadro trimestral de obligatorios</a>
+                            <a href="#">Asistencias 3.ª Valparaíso</a>
+                            <a href="#">Citaciones a Junta de Oficiales</a>
+                            <a href="#">Suspensiones</a>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="material-symbols-outlined">folder_open</span><span>Recursos</span>
+                            <svg class="accordion-icon"
+                                 width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <a href="#">Documentos</a>
+                            <a href="#">Galería</a>
+                        </div>
+                    </div>
+                    {% if current_user.is_admin %}
+                        <div class="accordion-item">
+                            <button class="accordion-header">
+                                <span class="material-symbols-outlined">settings</span><span>Configuración</span>
+                                <svg class="accordion-icon"
+                                     width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="accordion-content">
+                                <a href="{{ url_for('settings.cargos') }}">Cargos</a>
+                                <a href="{{ url_for('settings.permissions') }}">Permisos</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </aside>
             {% endif %}
+            <!-- Contenido -->
+            <main class="main-content"
+                  id="main-content"
+                  hx-boost="true"
+                  hx-target="#main-content"
+                  hx-select="#main-content"
+                  hx-swap="outerHTML">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% block content %}
+                {% endblock content %}
+            </main>
         </div>
-    </nav>
-
-    <div class="layout-container">
-        <!-- Left Sidebar -->
-        {% if current_user.is_authenticated %}
-        <aside class="sidebar" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-            <div class="accordion-item">
-                <a href="{{ url_for('main.index') }}" class="sidebar-link">
-                    <span class="material-symbols-outlined">home</span><span>Inicio</span>
-                </a>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">person</span><span>Perfil</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Hoja de servicio</a>
-                    <a href="#">Premios</a>
-                    <a href="#">Guardia nocturna</a>
-                    <a href="#">Licencias</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">group</span><span>Voluntarios</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="{{ url_for('volunteers.index') }}">Voluntarios</a>
-                    <a href="#">Listas</a>
-                    <a href="#">Oficiales</a>
-                    <a href="#">Registros históricos</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <a href="#" class="sidebar-link">
-                    <span class="material-symbols-outlined">calendar_today</span><span>Actos</span>
-                </a>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">hotel</span><span>Guardia Nocturna</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Integrantes</a>
-                    <a href="#">Permisos</a>
-                    <a href="#">Jefe de Guardia</a>
-                    <a href="#">Libro de Guardia Nocturna</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">book_2</span><span>Libro de Oficiales</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Agregar anotación</a>
-                    <a href="#">Ver Libro</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <a href="#" class="sidebar-link">
-                    <span class="material-symbols-outlined">event_busy</span><span>Licencias</span>
-                </a>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">local_atm</span><span>Tesorería</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Ver cuotas</a>
-                    <a href="#">Registrar pagos</a>
-                    <a href="#">Morosos</a>
-                    <a href="#">Condonaciones</a>
-                    <a href="#">Valor cuota</a>
-                    <a href="#">Cuota extraordinaria</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">garage_home</span><span>Cuartel</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Reportar problema</a>
-                    <a href="#">Revisar reportes</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">fire_truck</span><span>Material mayor</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Reportar problema</a>
-                    <a href="#">Revisar reportes</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">history_edu</span><span>Actas</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Sesiones</a>
-                    <a href="#">Memorias</a>
-                    <a href="#">Juntas de Oficiales</a>
-                    <a href="#">Consejos de Disciplina</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">assignment</span><span>Ayudantía</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Cuadro mensual</a>
-                    <a href="#">Parte mensual</a>
-                    <a href="#">Cuadro trimestral de obligatorios</a>
-                    <a href="#">Asistencias 3.ª Valparaíso</a>
-                    <a href="#">Citaciones a Junta de Oficiales</a>
-                    <a href="#">Suspensiones</a>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">folder_open</span><span>Recursos</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="#">Documentos</a>
-                    <a href="#">Galería</a>
-                </div>
-            </div>
-            {% if current_user.is_admin %}
-            <div class="accordion-item">
-                <button class="accordion-header">
-                    <span class="material-symbols-outlined">settings</span><span>Configuración</span>
-                    <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="accordion-content">
-                    <a href="{{ url_for('settings.cargos') }}">Cargos</a>
-                    <a href="{{ url_for('settings.permissions') }}">Permisos</a>
-                </div>
-            </div>
-            {% endif %}
-        </aside>
-        {% endif %}
-
-        <!-- Content Area -->
-        <main class="main-content" id="main-content" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                    <div class="alert">{{ message }}</div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-            
-            {% block content %}{% endblock %}
-        </main>
-    </div>
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-  </body>
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    </body>
 </html>

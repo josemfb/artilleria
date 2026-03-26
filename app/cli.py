@@ -32,7 +32,7 @@ from app.utils import validate_and_format_run
 )
 @with_appcontext
 def create_admin(username, password, nombre, apellido1, apellido2):
-    """Create an external admin user."""
+    """Crea un usuario administrador."""
 
     try:
         username = validate_and_format_run(username)
@@ -44,7 +44,7 @@ def create_admin(username, password, nombre, apellido1, apellido2):
         click.echo(f"Usuario {username} ya existe.")
         return
 
-    # Create User without HojaServicio (Not a volunteer)
+    # Sin Hoja de Servicio (no es un voluntario)
     user = Usuario(
         run=username, nombre=nombre, apellido1=apellido1, apellido2=apellido2
     )

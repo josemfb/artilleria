@@ -27,7 +27,7 @@ def validate_and_format_run(run: str, points: bool = False) -> str:
     cuerpo = run_limpio[:-1]
     dv = run_limpio[-1]
 
-    # Calculate expected verification digit (Modulo 11 algorithm)
+    # Cálculo del dígito verificador correcto
     digitos_al_reves = map(int, reversed(cuerpo))
     factors = [2, 3, 4, 5, 6, 7]
     s = sum(d * factors[i % 6] for i, d in enumerate(digitos_al_reves))

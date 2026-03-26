@@ -21,7 +21,7 @@ def index():
 @main_bp.route("/add_user", methods=["GET", "POST"])
 @login_required
 def add_user():
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.")
         return redirect(url_for("volunteers.index"))
 
@@ -35,7 +35,8 @@ def add_user():
         )
         user.set_password(form.password.data)
 
-        # Create default HojaServicio so the user appears in the volunteer list
+        # Crea Hoja de Servicios en blanco, para que el voluntario salga en las
+        # listas y distintas secciones
         profile = HojaServicio(user=user, fecha_alta=date.today())
 
         db.session.add(user)

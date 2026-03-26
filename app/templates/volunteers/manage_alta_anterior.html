@@ -1,101 +1,95 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="page-header">
-    <div class="d-flex align-items-center gap-2">
-        <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn-icon" title="Volver" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-            <span class="material-symbols-outlined">arrow_back</span>
-        </a>
-        <h2>{{ title }} - {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</h2>
+    <div class="page-header">
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('volunteers.details', user_id=user.id) }}"
+               class="btn-icon"
+               title="Volver"
+               hx-boost="true"
+               hx-target="#main-content"
+               hx-select="#main-content"
+               hx-swap="outerHTML">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h2>{{ title }} - {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}</h2>
+        </div>
     </div>
-</div>
-
-<div class="card shadow-sm">
-    <div class="card-body">
-        <form method="POST" action="{{ action_url }}" hx-post="{{ action_url }}" hx-target="#datos-tab" hx-swap="innerHTML">
-            {{ form.hidden_tag() }}
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        {{ form.fecha_alta.label(class="form-label") }}
-                        {{ form.fecha_alta(class="form-control", type="date") }}
-                        {% if form.fecha_alta.errors %}
-                            <div class="text-danger">
-                                {% for error in form.fecha_alta.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post"
+                  action="{{ action_url }}"
+                  hx-post="{{ action_url }}"
+                  hx-target="#datos-tab"
+                  hx-swap="innerHTML">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.fecha_alta.label(class="form-label") }}
+                            {{ form.fecha_alta(class="form-control", type="date") }}
+                            {% if form.fecha_alta.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.fecha_alta.errors %}<small>{{ error }}</small>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.fecha_baja.label(class="form-label") }}
+                            {{ form.fecha_baja(class="form-control", type="date") }}
+                            {% if form.fecha_baja.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.fecha_baja.errors %}<small>{{ error }}</small>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        {{ form.fecha_baja.label(class="form-label") }}
-                        {{ form.fecha_baja(class="form-control", type="date") }}
-                        {% if form.fecha_baja.errors %}
-                            <div class="text-danger">
-                                {% for error in form.fecha_baja.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.registro_general.label(class="form-label") }}
+                            {{ form.registro_general(class="form-control") }}
+                            {% if form.registro_general.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.registro_general.errors %}<small>{{ error }}</small>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.registro_quinta.label(class="form-label") }}
+                            {{ form.registro_quinta(class="form-control") }}
+                            {% if form.registro_quinta.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.registro_quinta.errors %}<small>{{ error }}</small>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        {{ form.registro_general.label(class="form-label") }}
-                        {{ form.registro_general(class="form-control") }}
-                        {% if form.registro_general.errors %}
-                            <div class="text-danger">
-                                {% for error in form.registro_general.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            {{ form.motivo_baja.label(class="form-label") }}
+                            {{ form.motivo_baja(class="form-select") }}
+                            {% if form.motivo_baja.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.motivo_baja.errors %}<small>{{ error }}</small>{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        {{ form.registro_quinta.label(class="form-label") }}
-                        {{ form.registro_quinta(class="form-control") }}
-                        {% if form.registro_quinta.errors %}
-                            <div class="text-danger">
-                                {% for error in form.registro_quinta.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
+                <div class="d-flex gap-2">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('volunteers.details', user_id=user.id) }}"
+                       class="btn btn-secondary"
+                       onclick="return false;">Cancelar</a>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="mb-3">
-                        {{ form.motivo_baja.label(class="form-label") }}
-                        {{ form.motivo_baja(class="form-select") }}
-                        {% if form.motivo_baja.errors %}
-                            <div class="text-danger">
-                                {% for error in form.motivo_baja.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="d-flex gap-2">
-                {{ form.submit(class="btn btn-primary") }}
-                <a href="{{ url_for('volunteers.details', user_id=user.id) }}" class="btn btn-secondary" onclick="return false;">Cancelar</a>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

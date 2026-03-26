@@ -26,7 +26,7 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Registrar template filters
+    # Registrar filtros de templates
     @app.template_filter("format_run")
     def format_run_filter(run_str):
         try:

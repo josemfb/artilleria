@@ -1,58 +1,55 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div id="add-user-content">
-<div class="login-container wide">
-    <div class="card shadow-sm text-left">
-        <div class="card-header">
-            <h2 class="page-title">Registrar Nuevo Voluntario</h2>
-        </div>
-        <div class="card-body">
-            <form action="" method="post" novalidate hx-boost="true" hx-target="#main-content" hx-swap="outerHTML">
-                {{ form.hidden_tag() }}
-                
-                <div class="form-group">
-                    {{ form.username.label(class="form-label") }}
-                    {% if form.username.errors %}
-                        {{ form.username(class="form-control is-invalid", placeholder="12.345.678-K") }}
-                        {% for error in form.username.errors %}
-                        <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
-                    {% else %}
-                        {{ form.username(class="form-control", placeholder="12.345.678-K") }}
-                    {% endif %}
+    <div id="add-user-content">
+        <div class="login-container wide">
+            <div class="card shadow-sm text-left">
+                <div class="card-header">
+                    <h2 class="page-title">Registrar Nuevo Voluntario</h2>
                 </div>
-
-                <div class="form-group">
-                    {{ form.nombre.label(class="form-label") }}
-                    {{ form.nombre(class="form-control" + (" is-invalid" if form.nombre.errors else "")) }}
-                    {% for error in form.nombre.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                <div class="card-body">
+                    <form action=""
+                          method="post"
+                          novalidate
+                          hx-boost="true"
+                          hx-target="#main-content"
+                          hx-swap="outerHTML">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.username.label(class="form-label") }}
+                            {% if form.username.errors %}
+                                {{ form.username(class="form-control is-invalid", placeholder="12.345.678-K") }}
+                                {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                            {% else %}
+                                {{ form.username(class="form-control", placeholder="12.345.678-K") }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.nombre.label(class="form-label") }}
+                            {{ form.nombre(class="form-control" + (" is-invalid" if form.nombre.errors else "") ) }}
+                            {% for error in form.nombre.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="d-flex gap-2">
+                            <div class="form-group flex-1">
+                                {{ form.apellido1.label(class="form-label") }}
+                                {{ form.apellido1(class="form-control" + (" is-invalid" if form.apellido1.errors else "") ) }}
+                                {% for error in form.apellido1.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="form-group flex-1">
+                                {{ form.apellido2.label(class="form-label") }}
+                                {{ form.apellido2(class="form-control" + (" is-invalid" if form.apellido2.errors else "") ) }}
+                                {% for error in form.apellido2.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "") ) }}
+                            {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                            <small class="text-muted">Asigne una contraseña temporal para el primer ingreso.</small>
+                        </div>
+                        {{ form.submit(class="btn btn-primary btn-block") }}
+                    </form>
                 </div>
-
-                <div class="d-flex gap-2">
-                    <div class="form-group flex-1">
-                        {{ form.apellido1.label(class="form-label") }}
-                        {{ form.apellido1(class="form-control" + (" is-invalid" if form.apellido1.errors else "")) }}
-                        {% for error in form.apellido1.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                    </div>
-                    <div class="form-group flex-1">
-                        {{ form.apellido2.label(class="form-label") }}
-                        {{ form.apellido2(class="form-control" + (" is-invalid" if form.apellido2.errors else "")) }}
-                        {% for error in form.apellido2.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {{ form.password.label(class="form-label") }}
-                    {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
-                    {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                    <small class="text-muted">Asigne una contraseña temporal para el primer ingreso.</small>
-                </div>
-
-                {{ form.submit(class="btn btn-primary btn-block") }}
-            </form>
+            </div>
         </div>
     </div>
-</div>
-</div>
-{% endblock %}
+{% endblock content %}

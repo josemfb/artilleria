@@ -1,45 +1,58 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div id="manage-cargo-content">
-<div class="page-header">
-    <div class="d-flex align-items-center gap-2">
-        <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn-icon" title="Volver" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-            <span class="material-symbols-outlined">arrow_back</span>
-        </a>
-        <div>
-            <h2>{{ title }}</h2>
-            <p class="text-muted manage-cargo-subtitle">Para: {{ user.nombre }} {{ user.apellido1 }}</p>
+    <div id="manage-cargo-content">
+        <div class="page-header">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}"
+                   class="btn-icon"
+                   title="Volver"
+                   hx-boost="true"
+                   hx-target="#main-content"
+                   hx-select="#main-content"
+                   hx-swap="outerHTML">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <div>
+                    <h2>{{ title }}</h2>
+                    <p class="text-muted manage-cargo-subtitle">Para: {{ user.nombre }} {{ user.apellido1 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="manage-cargo-container">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post"
+                          hx-boost="true"
+                          hx-target="#main-content"
+                          hx-select="#main-content"
+                          hx-swap="outerHTML">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.nombre_cargo.label(class="form-label") }}
+                            {{ form.nombre_cargo(class="form-control") }}
+                        </div>
+                        <div class="d-flex gap-2">
+                            <div class="form-group flex-1">
+                                {{ form.fecha_inicio.label(class="form-label") }}
+                                {{ form.fecha_inicio(class="form-control", type="date") }}
+                            </div>
+                            <div class="form-group flex-1">
+                                {{ form.fecha_termino.label(class="form-label") }}
+                                {{ form.fecha_termino(class="form-control", type="date") }}
+                            </div>
+                        </div>
+                        <div class="mt-4 manage-cargo-submit">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}"
+                               class="btn btn-cancel"
+                               hx-boost="true"
+                               hx-target="#main-content"
+                               hx-select="#main-content"
+                               hx-swap="outerHTML">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="manage-cargo-container">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="POST" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    {{ form.nombre_cargo.label(class="form-label") }}
-                    {{ form.nombre_cargo(class="form-control") }}
-                </div>
-                <div class="d-flex gap-2">
-                    <div class="form-group flex-1">
-                        {{ form.fecha_inicio.label(class="form-label") }}
-                        {{ form.fecha_inicio(class="form-control", type="date") }}
-                    </div>
-                    <div class="form-group flex-1">
-                        {{ form.fecha_termino.label(class="form-label") }}
-                        {{ form.fecha_termino(class="form-control", type="date") }}
-                    </div>
-                </div>
-                <div class="mt-4 manage-cargo-submit">
-                    {{ form.submit(class="btn btn-primary") }}
-                    <a href="{{ url_for('volunteers.edit_volunteer', user_id=user.id) }}" class="btn btn-cancel" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">Cancelar</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-</div>
-{% endblock %}
+{% endblock content %}

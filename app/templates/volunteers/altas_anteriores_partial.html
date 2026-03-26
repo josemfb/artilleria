@@ -1,88 +1,124 @@
-<!-- Altas Anteriores Section -->
 {% if user.profile.altas_anteriores %}
-<div class="volunteer-section">
-    <h5 class="volunteer-section-title">Altas Anteriores</h5>
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Fecha de Alta</th>
-                <th>Registro General</th>
-                <th>Registro Quinta</th>
-                <th>Fecha Baja</th>
-                <th>Motivo</th>
-                <th>Días servidos</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for alta in user.profile.altas_anteriores|sort(attribute='fecha_alta') %}
-            <tr id="alta-row-{{ alta.id }}">
-                <td>
-                    <span class="display-value" id="display-fecha_alta-{{ alta.id }}">{{ alta.fecha_alta.strftime('%d-%m-%Y') if alta.fecha_alta else '-' }}</span>
-                    <input type="date" class="form-control form-control-sm edit-value" id="edit-fecha_alta-{{ alta.id }}" value="{{ alta.fecha_alta.strftime('%Y-%m-%d') if alta.fecha_alta else '' }}" style="display: none;">
-                </td>
-                <td>
-                    <span class="display-value" id="display-registro_general-{{ alta.id }}">{{ alta.registro_general or '-' }}</span>
-                    <input type="text" class="form-control form-control-sm edit-value" id="edit-registro_general-{{ alta.id }}" value="{{ alta.registro_general or '' }}" style="display: none;">
-                </td>
-                <td>
-                    <span class="display-value" id="display-registro_quinta-{{ alta.id }}">{{ alta.registro_quinta or '-' }}</span>
-                    <input type="text" class="form-control form-control-sm edit-value" id="edit-registro_quinta-{{ alta.id }}" value="{{ alta.registro_quinta or '' }}" style="display: none;">
-                </td>
-                <td>
-                    <span class="display-value" id="display-fecha_baja-{{ alta.id }}">{{ alta.fecha_baja.strftime('%d-%m-%Y') if alta.fecha_baja else '-' }}</span>
-                    <input type="date" class="form-control form-control-sm edit-value" id="edit-fecha_baja-{{ alta.id }}" value="{{ alta.fecha_baja.strftime('%Y-%m-%d') if alta.fecha_baja else '' }}" style="display: none;">
-                </td>
-                <td>
-                    <span class="display-value" id="display-motivo_baja-{{ alta.id }}">{{ alta.motivo_baja or '-' }}</span>
-                    <select class="form-select form-select-sm edit-value" id="edit-motivo_baja-{{ alta.id }}" style="display: none;">
-                        <option value="">Seleccione un motivo</option>
-                        {% for motivo in motivos_baja %}
-                        <option value="{{ motivo }}" {% if alta.motivo_baja == motivo %}selected{% endif %}>{{ motivo }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td>{{ alta.total_dias or 0 }}</td>
-                <td>
-                    {% if current_user.has_permission('volunteers.add_volunteer') %}
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="enableInlineEdit({{ alta.id }})" title="Editar" id="edit-btn-{{ alta.id }}">
-                            <span class="material-symbols-outlined">ink_pen</span>
-                        </button>
-                        <button class="btn btn-success" onclick="saveInlineEdit({{ alta.id }})" title="Guardar" id="save-btn-{{ alta.id }}" style="display: none;">
-                            <span class="material-symbols-outlined">save</span>
-                        </button>
-                        <button class="btn btn-secondary" onclick="cancelInlineEdit({{ alta.id }})" title="Cancelar" id="cancel-btn-{{ alta.id }}" style="display: none;">
-                            <span class="material-symbols-outlined">close</span>
-                        </button>
-                        <button class="btn btn-outline-danger" title="Eliminar" onclick="deleteAltaAnterior({{ alta.id }})">
-                            <span class="material-symbols-outlined">delete_forever</span>
-                        </button>
-                    </div>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    <div class="volunteer-section">
+        <h5 class="volunteer-section-title">Altas Anteriores</h5>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Fecha de Alta</th>
+                    <th>Registro General</th>
+                    <th>Registro Quinta</th>
+                    <th>Fecha Baja</th>
+                    <th>Motivo</th>
+                    <th>Días servidos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alta in user.profile.altas_anteriores|sort(attribute='fecha_alta') %}
+                    <tr id="alta-row-{{ alta.id }}">
+                        <td>
+                            <span class="display-value" id="display-fecha_alta-{{ alta.id }}">{{ alta.fecha_alta.strftime("%d-%m-%Y") if alta.fecha_alta else '-' }}</span>
+                            <input type="date"
+                                   class="form-control form-control-sm edit-value"
+                                   id="edit-fecha_alta-{{ alta.id }}"
+                                   value="{{ alta.fecha_alta.strftime('%Y-%m-%d') if alta.fecha_alta else '' }}"
+                                   style="display: none">
+                        </td>
+                        <td>
+                            <span class="display-value" id="display-registro_general-{{ alta.id }}">{{ alta.registro_general or '-' }}</span>
+                            <input type="text"
+                                   class="form-control form-control-sm edit-value"
+                                   id="edit-registro_general-{{ alta.id }}"
+                                   value="{{ alta.registro_general or '' }}"
+                                   style="display: none">
+                        </td>
+                        <td>
+                            <span class="display-value" id="display-registro_quinta-{{ alta.id }}">{{ alta.registro_quinta or '-' }}</span>
+                            <input type="text"
+                                   class="form-control form-control-sm edit-value"
+                                   id="edit-registro_quinta-{{ alta.id }}"
+                                   value="{{ alta.registro_quinta or '' }}"
+                                   style="display: none">
+                        </td>
+                        <td>
+                            <span class="display-value" id="display-fecha_baja-{{ alta.id }}">{{ alta.fecha_baja.strftime("%d-%m-%Y") if alta.fecha_baja else '-' }}</span>
+                            <input type="date"
+                                   class="form-control form-control-sm edit-value"
+                                   id="edit-fecha_baja-{{ alta.id }}"
+                                   value="{{ alta.fecha_baja.strftime('%Y-%m-%d') if alta.fecha_baja else '' }}"
+                                   style="display: none">
+                        </td>
+                        <td>
+                            <span class="display-value" id="display-motivo_baja-{{ alta.id }}">{{ alta.motivo_baja or '-' }}</span>
+                            <select class="form-select form-select-sm edit-value"
+                                    id="edit-motivo_baja-{{ alta.id }}"
+                                    style="display: none">
+                                <option value="">Seleccione un motivo</option>
+                                {% for motivo in motivos_baja %}
+                                    <option value="{{ motivo }}"
+                                            {% if alta.motivo_baja == motivo %}selected{% endif %}>
+                                        {{ motivo }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>{{ alta.total_dias or 0 }}</td>
+                        <td>
+                            {% if current_user.has_permission('volunteers.edit') %}
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary"
+                                            onclick="enableInlineEdit({{ alta.id }})"
+                                            title="Editar"
+                                            id="edit-btn-{{ alta.id }}">
+                                        <span class="material-symbols-outlined">ink_pen</span>
+                                    </button>
+                                    <button class="btn btn-success"
+                                            onclick="saveInlineEdit({{ alta.id }})"
+                                            title="Guardar"
+                                            id="save-btn-{{ alta.id }}"
+                                            style="display: none">
+                                        <span class="material-symbols-outlined">save</span>
+                                    </button>
+                                    <button class="btn btn-secondary"
+                                            onclick="cancelInlineEdit({{ alta.id }})"
+                                            title="Cancelar"
+                                            id="cancel-btn-{{ alta.id }}"
+                                            style="display: none">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                    <button class="btn btn-outline-danger"
+                                            title="Eliminar"
+                                            onclick="deleteAltaAnterior({{ alta.id }})">
+                                        <span class="material-symbols-outlined">delete_forever</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endif %}
-
-<!-- Tab Actions -->
-{% if current_user.has_permission('volunteers.add_volunteer') %}
-<div class="tab-actions" id="datos-tab-actions">
-    <button class="btn btn-primary" id="edit-personal-data-btn" onclick="enablePersonalDataEdit()">Editar datos personales</button>
-    <button class="btn btn-primary" onclick="showAddAltaAnteriorForm()">Añadir alta anterior</button>
-</div>
+{% if current_user.has_permission('volunteers.edit') %}
+    <div class="tab-actions" id="datos-tab-actions">
+        <button class="btn btn-primary"
+                id="edit-personal-data-btn"
+                onclick="enablePersonalDataEdit()">Editar datos personales</button>
+        <button class="btn btn-primary" onclick="showAddAltaAnteriorForm()">Añadir alta anterior</button>
+    </div>
 {% endif %}
-
 <!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
-            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+                 role="alert">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
             </div>
         {% endfor %}
     {% endif %}

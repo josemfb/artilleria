@@ -1,6 +1,9 @@
-<form method="POST" action="{{ action_url }}" hx-post="{{ action_url }}" hx-target="#datos-tab" hx-swap="innerHTML">
+<form method="post"
+      action="{{ action_url }}"
+      hx-post="{{ action_url }}"
+      hx-target="#datos-tab"
+      hx-swap="innerHTML">
     {{ form.hidden_tag() }}
-    
     <div class="alta-anterior-form-row">
         <div class="alta-anterior-field">
             <div class="form-group">
@@ -8,73 +11,60 @@
                 {{ form.fecha_alta(class="form-control form-control-sm", type="date") }}
                 {% if form.fecha_alta.errors %}
                     <div class="text-danger">
-                        {% for error in form.fecha_alta.errors %}
-                            <small>{{ error }}</small>
-                        {% endfor %}
+                        {% for error in form.fecha_alta.errors %}<small>{{ error }}</small>{% endfor %}
                     </div>
                 {% endif %}
             </div>
         </div>
-        
         <div class="alta-anterior-field alta-anterior-field-small">
             <div class="form-group">
                 {{ form.registro_general.label(class="form-label") }}
                 {{ form.registro_general(class="form-control form-control-sm") }}
                 {% if form.registro_general.errors %}
                     <div class="text-danger">
-                        {% for error in form.registro_general.errors %}
-                            <small>{{ error }}</small>
-                        {% endfor %}
+                        {% for error in form.registro_general.errors %}<small>{{ error }}</small>{% endfor %}
                     </div>
                 {% endif %}
             </div>
         </div>
-        
         <div class="alta-anterior-field alta-anterior-field-small">
             <div class="form-group">
                 {{ form.registro_quinta.label(class="form-label") }}
                 {{ form.registro_quinta(class="form-control form-control-sm") }}
                 {% if form.registro_quinta.errors %}
                     <div class="text-danger">
-                        {% for error in form.registro_quinta.errors %}
-                            <small>{{ error }}</small>
-                        {% endfor %}
+                        {% for error in form.registro_quinta.errors %}<small>{{ error }}</small>{% endfor %}
                     </div>
                 {% endif %}
             </div>
         </div>
-        
         <div class="alta-anterior-field">
             <div class="form-group">
                 {{ form.fecha_baja.label(class="form-label") }}
                 {{ form.fecha_baja(class="form-control form-control-sm", type="date") }}
                 {% if form.fecha_baja.errors %}
                     <div class="text-danger">
-                        {% for error in form.fecha_baja.errors %}
-                            <small>{{ error }}</small>
-                        {% endfor %}
+                        {% for error in form.fecha_baja.errors %}<small>{{ error }}</small>{% endfor %}
                     </div>
                 {% endif %}
             </div>
         </div>
-        
         <div class="alta-anterior-field">
             <div class="form-group">
                 {{ form.motivo_baja.label(class="form-label") }}
                 {{ form.motivo_baja(class="form-select form-select-sm motivo-baja-select") }}
                 {% if form.motivo_baja.errors %}
                     <div class="text-danger">
-                        {% for error in form.motivo_baja.errors %}
-                            <small>{{ error }}</small>
-                        {% endfor %}
+                        {% for error in form.motivo_baja.errors %}<small>{{ error }}</small>{% endfor %}
                     </div>
                 {% endif %}
             </div>
         </div>
     </div>
-    
     <div class="alta-anterior-buttons">
         {{ form.submit(class="btn btn-primary btn-sm") }}
-        <button type="button" class="btn btn-secondary btn-sm" onclick="hideAltaAnteriorForm()">Cancelar</button>
+        <button type="button"
+                class="btn btn-secondary btn-sm"
+                onclick="hideAltaAnteriorForm()">Cancelar</button>
     </div>
 </form>

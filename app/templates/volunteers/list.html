@@ -1,115 +1,113 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div id="volunteers-list-content">
-<div class="page-header">
-    <div class="d-flex align-items-center volunteer-list-header">
-        <div>
-            <h2>Voluntarios</h2>
-            <p class="text-muted volunteer-list-subtitle">Nómina de voluntarios de la Quinta Compañía.</p>
+    <div id="volunteers-list-content">
+        <div class="page-header">
+            <div class="d-flex align-items-center volunteer-list-header">
+                <div>
+                    <h2>Voluntarios</h2>
+                    <p class="text-muted volunteer-list-subtitle">Nómina de voluntarios de la Quinta Compañía.</p>
+                </div>
+                {% if current_user.has_permission('volunteers.edit') %}
+                    <a href="{{ url_for('main.add_user') }}"
+                       class="btn btn-primary"
+                       hx-boost="true"
+                       hx-target="#main-content"
+                       hx-swap="outerHTML">Añadir voluntario</a>
+                {% endif %}
+            </div>
         </div>
-        {% if current_user.has_permission('volunteers.add_volunteer') %}
-        <a href="{{ url_for('main.add_user') }}" class="btn btn-primary" hx-boost="true" hx-target="#main-content" hx-swap="outerHTML">Añadir voluntario</a>
-        {% endif %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover table-compact mb-0">
+                    <thead>
+                        <tr>
+                            <th class="width-60"></th>
+                            <th>
+                                <a href="{{ url_for('volunteers.index', sort_by='apellido', order='desc' if current_sort == 'apellido' and current_order == 'asc' else 'asc') }}"
+                                   class="text-dark text-decoration-none"
+                                   hx-boost="true"
+                                   hx-target="#main-content"
+                                   hx-select="#main-content"
+                                   hx-swap="outerHTML">
+                                    Nombre
+                                    <span class="sort-icon{% if current_sort != 'apellido' %} sort-icon-hidden{% endif %}">
+                                        {{ '↓' if current_sort == 'apellido' and current_order == 'asc' else '↑' }}
+                                    </span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ url_for('volunteers.index', sort_by='categoria', order='desc' if current_sort == 'categoria' and current_order == 'asc' else 'asc') }}"
+                                   class="text-dark text-decoration-none"
+                                   hx-boost="true"
+                                   hx-target="#main-content"
+                                   hx-select="#main-content"
+                                   hx-swap="outerHTML">
+                                    Categoría
+                                    <span class="sort-icon{% if current_sort != 'categoria' %} sort-icon-hidden{% endif %}">
+                                        {{ '↓' if current_sort == 'categoria' and current_order == 'asc' else '↑' }}
+                                    </span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ url_for('volunteers.index', sort_by='cargo', order='desc' if current_sort == 'cargo' and current_order == 'asc' else 'asc') }}"
+                                   class="text-dark text-decoration-none"
+                                   hx-boost="true"
+                                   hx-target="#main-content"
+                                   hx-select="#main-content"
+                                   hx-swap="outerHTML">
+                                    Cargo
+                                    <span class="sort-icon{% if current_sort != 'cargo' %} sort-icon-hidden{% endif %}">
+                                        {{ '↓' if current_sort == 'cargo' and current_order == 'asc' else '↑' }}
+                                    </span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ url_for('volunteers.index', sort_by='antiguedad', order='desc' if current_sort == 'antiguedad' and current_order == 'asc' else 'asc') }}"
+                                   class="text-dark text-decoration-none"
+                                   hx-boost="true"
+                                   hx-target="#main-content"
+                                   hx-select="#main-content"
+                                   hx-swap="outerHTML">
+                                    Antigüedad
+                                    <span class="sort-icon{% if current_sort != 'antiguedad' %} sort-icon-hidden{% endif %}">
+                                        {{ '↓' if current_sort == 'antiguedad' and current_order == 'asc' else '↑' }}
+                                    </span>
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td class="text-center pl-3">
+                                    <img src="{{ url_for('static', filename=user.picture) }}"
+                                         class="user-avatar volunteer-list-avatar"
+                                         alt="{{ user.nombre }}"
+                                         width="36px"
+                                         height="36px">
+                                </td>
+                                <td class="font-weight-500">
+                                    <a href="{{ url_for('volunteers.details', user_id=user.id) }}"
+                                       class="text-dark text-decoration-none"
+                                       hx-boost="true"
+                                       hx-target="#main-content"
+                                       hx-select="#main-content"
+                                       hx-swap="outerHTML">
+                                        {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}
+                                    </a>
+                                </td>
+                                <td>{{ user.display_categoria if user.display_categoria else '-' }}</td>
+                                <td>{{ user.display_cargo if user.display_cargo else '-' }}</td>
+                                <td>{{ user.profile.display_antiguedad_short if user.profile and user.profile.display_antiguedad_short else '-' }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center p-4 text-muted">No se encontraron voluntarios registrados.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="card shadow-sm">
-    <div class="card-body p-0">
-        <table class="table table-hover table-compact mb-0">
-            <thead>
-                <tr>
-                    <th class="width-60"></th>
-                    <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='apellido', order='desc' if current_sort == 'apellido' and current_order == 'asc' else 'asc') }}"
-                           class="text-dark text-decoration-none"
-                           hx-boost="true"
-                           hx-target="#main-content"
-                           hx-select="#main-content"
-                           hx-swap="outerHTML">
-                            Nombre
-                            <span class="sort-icon{% if current_sort != 'apellido' %} sort-icon-hidden{% endif %}">
-                                {{ '↓' if current_sort == 'apellido' and current_order == 'asc' else '↑' }}
-                            </span>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='categoria', order='desc' if current_sort == 'categoria' and current_order == 'asc' else 'asc') }}"
-                           class="text-dark text-decoration-none"
-                           hx-boost="true"
-                           hx-target="#main-content"
-                           hx-select="#main-content"
-                           hx-swap="outerHTML">
-                            Categoría
-                            <span class="sort-icon{% if current_sort != 'categoria' %} sort-icon-hidden{% endif %}">
-                                {{ '↓' if current_sort == 'categoria' and current_order == 'asc' else '↑' }}
-                            </span>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='cargo', order='desc' if current_sort == 'cargo' and current_order == 'asc' else 'asc') }}"
-                           class="text-dark text-decoration-none"
-                           hx-boost="true"
-                           hx-target="#main-content"
-                           hx-select="#main-content"
-                           hx-swap="outerHTML">
-                            Cargo
-                            <span class="sort-icon{% if current_sort != 'cargo' %} sort-icon-hidden{% endif %}">
-                                {{ '↓' if current_sort == 'cargo' and current_order == 'asc' else '↑' }}
-                            </span>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ url_for('volunteers.index', sort_by='antiguedad', order='desc' if current_sort == 'antiguedad' and current_order == 'asc' else 'asc') }}"
-                           class="text-dark text-decoration-none"
-                           hx-boost="true"
-                           hx-target="#main-content"
-                           hx-select="#main-content"
-                           hx-swap="outerHTML">
-                            Antigüedad
-                            <span class="sort-icon{% if current_sort != 'antiguedad' %} sort-icon-hidden{% endif %}">
-                                {{ '↓' if current_sort == 'antiguedad' and current_order == 'asc' else '↑' }}
-                            </span>
-                        </a>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td class="text-center pl-3">
-                         <img src="{{ url_for('static', filename=user.picture) }}" class="user-avatar volunteer-list-avatar" alt="{{ user.nombre }}">
-                    </td>
-                    <td class="font-weight-500">
-                        <a href="{{ url_for('volunteers.details', user_id=user.id) }}"
-                           class="text-dark text-decoration-none"
-                           hx-boost="true"
-                           hx-target="#main-content"
-                           hx-select="#main-content"
-                           hx-swap="outerHTML">
-                            {{ user.nombre }} {{ user.apellido1 }} {{ user.apellido2 }}
-                        </a>
-                    </td>
-                    <td>
-                        {{ user.display_categoria if user.display_categoria else '-' }}
-                    </td>
-                    <td>
-                        {{ user.display_cargo if user.display_cargo else '-' }}
-                    </td>
-                    <td>
-                        {{ user.profile.display_antiguedad_short if user.profile and user.profile.display_antiguedad_short else '-' }}
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="5" class="text-center p-4 text-muted">
-                        No se encontraron voluntarios registrados.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-</div>
-{% endblock %}
+{% endblock content %}

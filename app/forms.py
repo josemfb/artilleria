@@ -46,12 +46,10 @@ class AddVolunteerForm(FlaskForm):
 
 
 class EditVolunteerForm(FlaskForm):
-    # Usuario fields
     nombre = StringField("Nombres", validators=[DataRequired()])
     apellido1 = StringField("Apellido Paterno", validators=[DataRequired()])
     apellido2 = StringField("Apellido Materno", validators=[DataRequired()])
 
-    # HojaServicio fields
     fecha_nacimiento = DateField(
         "Fecha de Nacimiento", format="%Y-%m-%d", validators=[Optional()]
     )
@@ -60,13 +58,11 @@ class EditVolunteerForm(FlaskForm):
     telefono = StringField("Teléfono")
     email = StringField("Email", validators=[Optional(), Email()])
 
-    # Institutional fields
     fecha_alta = DateField("Fecha de Alta", format="%Y-%m-%d", validators=[Optional()])
     categoria = SelectField(
         "Categoría", choices=[(c, c) for c in CATEGORIAS], validators=[Optional()]
     )
 
-    # Baja fields
     fecha_baja = DateField("Fecha de Baja", format="%Y-%m-%d", validators=[Optional()])
     motivo_baja = SelectField(
         "Motivo de Baja",
@@ -77,7 +73,6 @@ class EditVolunteerForm(FlaskForm):
 
 
 class InlineEditPersonalDataForm(FlaskForm):
-    # Only personal data fields (not RUN)
     fecha_nacimiento = DateField(
         "Fecha de Nacimiento", format="%Y-%m-%d", validators=[Optional()]
     )

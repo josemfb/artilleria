@@ -1,77 +1,71 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div id="permissions-content">
-<div class="page-header">
-    <h2>Gestión de Permisos</h2>
-    <p class="text-muted">Configura los permisos de acceso para cada cargo jerárquico y para los voluntarios sin cargo.</p>
-</div>
-
-<div class="settings-layout">
-    <!-- Sidebar: Cargo Selector -->
-    <div class="settings-sidebar">
-        <div class="card shadow-sm">
-            <div class="card-header bg-light">Seleccionar Nivel</div>
-            <div class="list-group list-group-flush list-group-compact">
-
-                {% for cargo in cargos %}
-                <a href="{{ url_for('settings.permissions', cargo_id=cargo.id) }}" 
-                   hx-get="{{ url_for('settings.permissions', cargo_id=cargo.id) }}"
-                   hx-target="#main-content"
-                   hx-select="#main-content"
-                   hx-swap="outerHTML"
-                   class="list-group-item list-group-item-action {% if selected_cargo and selected_cargo.id == cargo.id %}active-cargo{% endif %}"
-                   >
-                   <div class="cargo-name">{{ cargo.nombre }}</div>
-                </a>
-                {% endfor %}
-            </div>
+    <div id="permissions-content">
+        <div class="page-header">
+            <h2>Gestión de Permisos</h2>
+            <p class="text-muted">Configura los permisos de acceso para cada cargo jerárquico y para los voluntarios sin cargo.</p>
         </div>
-    </div>
-
-    <!-- Main Content: Permissions Form -->
-    <div class="settings-main">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                Configurando: 
-                <span class="selected-cargo">
-                    {% if selected_cargo %}{{ selected_cargo.nombre }}{% else %}Seleccione un cargo{% endif %}
-                </span>
-            </div>
-            <div class="card-body">
-                <form method="POST" hx-boost="true" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML">
-                    {% for group_key, group in system_permissions.items() %}
-                        <div class="perm-section">
-                            <h4>{{ group.label }}</h4>
-                                {{ group.label }}
-                            </h4>
-                            <div class="perm-grid">
-                                {% for perm_key, perm_label in group.perms.items() %}
-                                    {% set full_perm = group_key + '.' + perm_key %}
-                                    <label class="d-flex align-items-center gap-2 perm-label">
-                                        <input type="checkbox" name="perm_{{ full_perm }}" 
-                                               {% if full_perm in active_perms %}checked{% endif %}
-                                               class="perm-checkbox">
-                                        <span>{{ perm_label }}</span>
-                                    </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                    
-                    <div class="perm-submit-section">
-                        <button type="submit" class="btn btn-primary">Guardar Permisos</button>
+        <div class="settings-layout">
+            <div class="settings-sidebar">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">Seleccionar Nivel</div>
+                    <div class="list-group list-group-flush list-group-compact">
+                        {% for cargo in cargos %}
+                            <a href="{{ url_for('settings.permissions', cargo_id=cargo.id) }}"
+                               hx-get="{{ url_for('settings.permissions', cargo_id=cargo.id) }}"
+                               hx-target="#main-content"
+                               hx-select="#main-content"
+                               hx-swap="outerHTML"
+                               class="list-group-item list-group-item-action {% if selected_cargo and selected_cargo.id == cargo.id %}active-cargo{% endif %}">
+                                <div class="cargo-name">{{ cargo.nombre }}</div>
+                            </a>
+                        {% endfor %}
                     </div>
-                </form>
+                </div>
+            </div>
+            <div class="settings-main">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        Configurando:
+                        <span class="selected-cargo">
+                            {% if selected_cargo %}
+                                {{ selected_cargo.nombre }}
+                            {% else %}
+                                Seleccione un cargo
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <form method="post"
+                              hx-boost="true"
+                              hx-target="#main-content"
+                              hx-select="#main-content"
+                              hx-swap="outerHTML">
+                            {% for group_key, group in system_permissions.items() %}
+                                <div class="perm-section">
+                                    <h4>{{ group.label }}</h4>
+                                    {{ group.label }}
+                                    <div class="perm-grid">
+                                        {% for perm_key, perm_label in group.perms.items() %}
+                                            {% set full_perm = group_key + '.' + perm_key %}
+                                            <label class="d-flex align-items-center gap-2 perm-label">
+                                                <input type="checkbox"
+                                                       name="perm_{{ full_perm }}"
+                                                       {% if full_perm in active_perms %}checked{% endif %}
+                                                       class="perm-checkbox">
+                                                <span>{{ perm_label }}</span>
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="perm-submit-section">
+                                <button type="submit" class="btn btn-primary">Guardar Permisos</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-
-    .active-cargo {
-        background-color: #e8f5e9 !important;
-        border-left: 4px solid var(--primary-green) !important;
-    }
-</style>
-{% endblock %}
+{% endblock content %}

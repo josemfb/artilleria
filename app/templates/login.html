@@ -1,43 +1,38 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="login-container">
-    <div class="card shadow-sm text-left">
-        <div class="card-header">
-            <h2 class="login-title">Iniciar Sesión</h2>
-        </div>
-        <div class="card-body">
-            <form action="" method="post" novalidate hx-boost="false">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    {{ form.username.label(class="form-label") }}
-                    {% if form.username.errors %}
-                        {{ form.username(size=32, class="form-control is-invalid") }}
-                        {% for error in form.username.errors %}
-                        <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
-                    {% else %}
-                        {{ form.username(size=32, class="form-control") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.password.label(class="form-label") }}
-                    {% if form.password.errors %}
-                        {{ form.password(size=32, class="form-control is-invalid") }}
-                        {% for error in form.password.errors %}
-                        <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
-                    {% else %}
-                        {{ form.password(size=32, class="form-control") }}
-                    {% endif %}
-                </div>
-                <div class="form-group d-flex align-items-center gap-2">
-                    {{ form.remember_me() }}
-                    {{ form.remember_me.label(class="checkbox-label") }}
-                </div>
-                {{ form.submit(class="btn btn-primary btn-block") }}
-            </form>
+    <div class="login-container">
+        <div class="card shadow-sm text-left">
+            <div class="card-header">
+                <h2 class="login-title">Iniciar Sesión</h2>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" novalidate hx-boost="false">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.username.label(class="form-label") }}
+                        {% if form.username.errors %}
+                            {{ form.username(size=32, class="form-control is-invalid") }}
+                            {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        {% else %}
+                            {{ form.username(size=32, class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label(class="form-label") }}
+                        {% if form.password.errors %}
+                            {{ form.password(size=32, class="form-control is-invalid") }}
+                            {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        {% else %}
+                            {{ form.password(size=32, class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group d-flex align-items-center gap-2">
+                        {{ form.remember_me() }}
+                        {{ form.remember_me.label(class="checkbox-label") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary btn-block") }}
+                </form>
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}

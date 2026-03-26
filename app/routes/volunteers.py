@@ -95,7 +95,7 @@ def details(user_id):
 @volunteers_bp.route("/edit/<int:user_id>", methods=["GET", "POST"])
 @login_required
 def edit_volunteer(user_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.", "error")
         return redirect(url_for("volunteers.details", user_id=user_id))
 
@@ -164,7 +164,7 @@ def edit_volunteer(user_id):
 @volunteers_bp.route("/<int:user_id>/inline-edit-personal-data", methods=["POST"])
 @login_required
 def inline_edit_personal_data(user_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         if request.headers.get("HX-Request") or request.args.get("htmx") == "1":
             return (
                 jsonify({"error": "No tienes permiso para realizar esta acción."}),
@@ -231,7 +231,7 @@ def inline_edit_personal_data(user_id):
 @volunteers_bp.route("/<int:user_id>/cargos/add", methods=["GET", "POST"])
 @login_required
 def add_cargo(user_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.")
         return redirect(url_for("volunteers.details", user_id=user_id))
 
@@ -287,7 +287,7 @@ def add_cargo(user_id):
 @volunteers_bp.route("/cargos/edit/<int:cargo_id>", methods=["GET", "POST"])
 @login_required
 def edit_cargo(cargo_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.")
         return redirect(url_for("volunteers.index"))
 
@@ -344,7 +344,7 @@ def edit_cargo(cargo_id):
 @volunteers_bp.route("/cargos/delete/<int:cargo_id>", methods=["POST"])
 @login_required
 def delete_cargo(cargo_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.")
         return redirect(url_for("volunteers.index"))
 
@@ -383,7 +383,7 @@ def delete_cargo(cargo_id):
 @volunteers_bp.route("/<int:user_id>/altas-anteriores/add", methods=["GET", "POST"])
 @login_required
 def add_alta_anterior(user_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.", "error")
         return redirect(url_for("volunteers.details", user_id=user_id))
 
@@ -438,7 +438,7 @@ def add_alta_anterior(user_id):
 @volunteers_bp.route("/altas-anteriores/edit/<int:alta_id>", methods=["GET", "POST"])
 @login_required
 def edit_alta_anterior(alta_id):
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.", "error")
         return redirect(url_for("volunteers.index"))
 
@@ -502,7 +502,7 @@ def delete_alta_anterior(alta_id):
     print(f"Request headers: {dict(request.headers)}")
     print(f"Request form: {request.form}")
 
-    if not current_user.has_permission("volunteers.add_volunteer"):
+    if not current_user.has_permission("volunteers.edit"):
         flash("No tienes permiso para realizar esta acción.", "error")
         return redirect(url_for("volunteers.index"))
 
