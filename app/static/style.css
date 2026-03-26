@@ -733,6 +733,7 @@ a {
     color: var(--warning);
     border: 1px solid var(--warning-border);
     border-radius: 4px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
