@@ -57,84 +57,161 @@
                             
                             <!-- Right Column: Other Personal Data -->
                             <div class="volunteer-details-col-8">
-                                <div class="personal-data-grid">
-                                    
-                                    <div>
-                                        <label class="form-label">
-                                            {% if user.profile.altas_anteriores %}
-                                                Fecha de Última Alta
-                                            {% else %}
-                                                Fecha de Alta
-                                            {% endif %}
-                                        </label>
+                                <!-- Display mode -->
+                                <div id="personal-data-display">
+                                    <div class="personal-data-grid">
+                                        
                                         <div>
-                                            {% if user.profile.fecha_alta %}
-                                                {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
-                                            {% else %}
-                                                <span class="text-muted">-</span>
-                                            {% endif %}
+                                            <label class="form-label">
+                                                {% if user.profile.altas_anteriores %}
+                                                    Fecha de Última Alta
+                                                {% else %}
+                                                    Fecha de Alta
+                                                {% endif %}
+                                            </label>
+                                            <div id="display-fecha-alta">
+                                                {% if user.profile.fecha_alta %}
+                                                    {{ user.profile.fecha_alta.strftime('%d-%m-%Y') }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="form-label">Antigüedad</label>
+                                            <div>
+                                                {% if user.profile.antiguedad %}
+                                                    {{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="form-label">Fecha Nacimiento</label>
+                                            <div id="display-fecha-nacimiento">
+                                                {% if user.profile.fecha_nacimiento %}
+                                                    {{ user.profile.fecha_nacimiento.strftime('%d-%m-%Y') }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label">Ocupación</label>
+                                            <div id="display-ocupacion">{{ user.profile.ocupacion or '-' }}</div>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label">Teléfono</label>
+                                            <div id="display-telefono">{{ user.profile.telefono or '-' }}</div>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label">Email</label>
+                                            <div id="display-email">
+                                                {% if user.profile.email %}
+                                                    {{ user.profile.email }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label">RUN</label>
+                                            <div>{{ user.run|format_run }}</div>
+                                        </div>
+
+                                        {% if user.profile and user.profile.cargo_actual %}
+                                        <div>
+                                            <label class="form-label">Cargo Actual</label>
+                                            <div>{{ user.profile.cargo_actual }}</div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div>
+                                            <label class="form-label">Dirección</label>
+                                            <div id="display-direccion">{{ user.profile.direccion or '-' }}</div>
                                         </div>
                                     </div>
-                                    
-                                    <div>
-                                        <label class="form-label">Antigüedad</label>
-                                        <div>
-                                            {% if user.profile.antiguedad %}
-                                                {{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días
-                                            {% else %}
-                                                <span class="text-muted">-</span>
+                                </div>
+
+                                <!-- Edit mode -->
+                                <div id="personal-data-edit" class="hidden">
+                                    <form id="inline-edit-form" method="POST" action="{{ url_for('volunteers.inline_edit_personal_data', user_id=user.id) }}" hx-post="{{ url_for('volunteers.inline_edit_personal_data', user_id=user.id) }}" hx-target="#volunteer-details-content" hx-swap="outerHTML"
+                                          data-fecha-nacimiento="{{ user.profile.fecha_nacimiento.strftime('%Y-%m-%d') if user.profile.fecha_nacimiento else '' }}"
+                                          data-ocupacion="{{ user.profile.ocupacion or '' }}"
+                                          data-telefono="{{ user.profile.telefono or '' }}"
+                                          data-email="{{ user.profile.email or '' }}"
+                                          data-direccion="{{ user.profile.direccion or '' }}"
+                                          data-fecha-alta="{{ user.profile.fecha_alta.strftime('%Y-%m-%d') if user.profile.fecha_alta else '' }}">
+                                        {{ inline_form.hidden_tag() }}
+                                        <div class="personal-data-grid">
+                                            
+                                            <div>
+                                                <label class="form-label">
+                                                    {% if user.profile.altas_anteriores %}
+                                                        Fecha de Última Alta
+                                                    {% else %}
+                                                        Fecha de Alta
+                                                    {% endif %}
+                                                </label>
+                                                {{ inline_form.fecha_alta(class="form-control", type="date") }}
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="form-label">Antigüedad</label>
+                                                <div>
+                                                    {% if user.profile.antiguedad %}
+                                                        {{ user.profile.antiguedad[0] }} años, {{ user.profile.antiguedad[1] }} meses, {{ user.profile.antiguedad[2] }} días
+                                                    {% else %}
+                                                        <span class="text-muted">-</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="form-label">{{ inline_form.fecha_nacimiento.label }}</label>
+                                                {{ inline_form.fecha_nacimiento(class="form-control", type="date") }}
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label">{{ inline_form.ocupacion.label }}</label>
+                                                {{ inline_form.ocupacion(class="form-control") }}
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label">{{ inline_form.telefono.label }}</label>
+                                                {{ inline_form.telefono(class="form-control") }}
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label">{{ inline_form.email.label }}</label>
+                                                {{ inline_form.email(class="form-control") }}
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label">RUN</label>
+                                                <div>{{ user.run|format_run }}</div>
+                                            </div>
+
+                                            {% if user.profile and user.profile.cargo_actual %}
+                                            <div>
+                                                <label class="form-label">Cargo Actual</label>
+                                                <div>{{ user.profile.cargo_actual }}</div>
+                                            </div>
                                             {% endif %}
+                                            
+                                            <div>
+                                                <label class="form-label">{{ inline_form.direccion.label }}</label>
+                                                {{ inline_form.direccion(class="form-control") }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="form-label">Fecha Nacimiento</label>
-                                        <div>
-                                            {% if user.profile.fecha_nacimiento %}
-                                                {{ user.profile.fecha_nacimiento.strftime('%d-%m-%Y') }}
-                                            {% else %}
-                                                <span class="text-muted">-</span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">Ocupación</label>
-                                        <div>{{ user.profile.ocupacion or '-' }}</div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">Teléfono</label>
-                                        <div>{{ user.profile.telefono or '-' }}</div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">Email</label>
-                                        <div>
-                                            {% if user.profile.email %}
-                                                {{ user.profile.email }}
-                                            {% else %}
-                                                <span class="text-muted">-</span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="form-label">RUN</label>
-                                        <div>{{ user.run|format_run }}</div>
-                                    </div>
-
-                                    {% if user.profile and user.profile.cargo_actual %}
-                                    <div>
-                                        <label class="form-label">Cargo Actual</label>
-                                        <div>{{ user.profile.cargo_actual }}</div>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    <div>
-                                        <label class="form-label">Dirección</label>
-                                        <div>{{ user.profile.direccion or '-' }}</div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -165,8 +242,8 @@
                         {% endif %}
                         
                         {% if current_user.has_permission('volunteers.add_volunteer') %}
-                        <div class="tab-actions">
-                            <button class="btn btn-primary" disabled>Editar datos personales</button>
+                        <div class="tab-actions" id="datos-tab-actions">
+                            <button class="btn btn-primary" id="edit-personal-data-btn" onclick="enablePersonalDataEdit()">Editar datos personales</button>
                             <button class="btn btn-primary" disabled>Editar altas anteriores</button>
                         </div>
                         {% endif %}
@@ -395,18 +472,4 @@
         
 </div>
 </div>
-
-<script>
-function showTab(tabId) {
-    const container = document.getElementById('volunteer-details-content');
-    const panes = container.querySelectorAll('.tab-pane');
-    const tabs = container.querySelectorAll('.service-tab');
-    
-    panes.forEach(pane => pane.classList.remove('active'));
-    tabs.forEach(tab => tab.classList.remove('active'));
-    
-    document.getElementById(tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
-}
-</script>
 {% endblock %}

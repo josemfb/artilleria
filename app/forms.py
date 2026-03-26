@@ -76,6 +76,20 @@ class EditVolunteerForm(FlaskForm):
     submit = SubmitField("Guardar Cambios")
 
 
+class InlineEditPersonalDataForm(FlaskForm):
+    # Only personal data fields (not RUN)
+    fecha_nacimiento = DateField(
+        "Fecha de Nacimiento", format="%Y-%m-%d", validators=[Optional()]
+    )
+    ocupacion = StringField("Ocupación")
+    direccion = StringField("Dirección")
+    telefono = StringField("Teléfono")
+    email = StringField("Email", validators=[Optional(), Email()])
+    fecha_alta = DateField("Fecha de Alta", format="%Y-%m-%d", validators=[Optional()])
+    submit = SubmitField("Guardar cambios", render_kw={"class": "btn btn-success"})
+    cancel = SubmitField("Cancelar")
+
+
 class CargoForm(FlaskForm):
     nombre_cargo = SelectField("Cargo", validators=[DataRequired()])
     fecha_inicio = DateField(

@@ -93,3 +93,42 @@ function showTab(tabId) {
         clickedButton.classList.add('active');
     }
 }
+
+// Inline editing functions for volunteer personal data
+function enablePersonalDataEdit() {
+    // Hide display mode, show edit mode
+    document.getElementById('personal-data-display').classList.add('hidden');
+    document.getElementById('personal-data-edit').classList.remove('hidden');
+    
+    // Update tab actions to show save/cancel buttons
+    const tabActions = document.getElementById('datos-tab-actions');
+    tabActions.innerHTML = `
+        <button type="submit" form="inline-edit-form" class="btn btn-success">Guardar cambios</button>
+        <button class="btn btn-secondary" onclick="cancelPersonalDataEdit()">Cancelar</button>
+    `;
+    
+    // Pre-populate form fields with current values from data attributes
+    const form = document.getElementById('inline-edit-form');
+    if (form) {
+        const data = form.dataset;
+        if (data.fechaNacimiento) document.getElementById('fecha_nacimiento').value = data.fechaNacimiento;
+        if (data.ocupacion) document.getElementById('ocupacion').value = data.ocupacion;
+        if (data.telefono) document.getElementById('telefono').value = data.telefono;
+        if (data.email) document.getElementById('email').value = data.email;
+        if (data.direccion) document.getElementById('direccion').value = data.direccion;
+        if (data.fechaAlta) document.getElementById('fecha_alta').value = data.fechaAlta;
+    }
+}
+
+function cancelPersonalDataEdit() {
+    // Show display mode, hide edit mode
+    document.getElementById('personal-data-display').classList.remove('hidden');
+    document.getElementById('personal-data-edit').classList.add('hidden');
+    
+    // Restore original tab actions
+    const tabActions = document.getElementById('datos-tab-actions');
+    tabActions.innerHTML = `
+        <button class="btn btn-primary" id="edit-personal-data-btn" onclick="enablePersonalDataEdit()">Editar datos personales</button>
+        <button class="btn btn-primary" disabled>Editar altas anteriores</button>
+    `;
+}

@@ -1,8 +1,8 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from app import db
-from app.forms import CargoForm, EditVolunteerForm
+from app.forms import CargoForm, EditVolunteerForm, InlineEditPersonalDataForm
 from app.models import Cargo, Usuario
 
 volunteers_bp = Blueprint("volunteers", __name__, url_prefix="/voluntarios")
@@ -66,11 +66,22 @@ def details(user_id):
 
     show_full = current_user.has_permission("volunteers.view_details")
 
+    # Create inline edit form for personal data
+    inline_form = InlineEditPersonalDataForm()
+
     if request.headers.get("HX-Request"):
         return render_template(
-            "volunteers/details.html", user=user, show_full=show_full
+            "volunteers/details.html",
+            user=user,
+            show_full=show_full,
+            inline_form=inline_form,
         )
-    return render_template("volunteers/details.html", user=user, show_full=show_full)
+    return render_template(
+        "volunteers/details.html",
+        user=user,
+        show_full=show_full,
+        inline_form=inline_form,
+    )
 
 
 @volunteers_bp.route("/edit/<int:user_id>", methods=["GET", "POST"])
@@ -134,6 +145,85 @@ def edit_volunteer(user_id):
         return render_template("volunteers/edit.html", form=form, user=user)
 
     return render_template("volunteers/edit.html", form=form, user=user)
+
+
+@volunteers_bp.route("/<int:user_id>/inline-edit-personal-data", methods=["POST"])
+@login_required
+def inline_edit_personal_data(user_id):
+    if not current_user.has_permission("volunteers.add_volunteer"):
+        if request.headers.get("HX-Request"):
+            return (
+                jsonify({"error": "No tienes permiso para realizar esta acción."}),
+                403,
+            )
+        flash("No tienes permiso para realizar esta acción.", "error")
+        return redirect(url_for("volunteers.details", user_id=user_id))
+
+    user = db.session.get(Usuario, user_id)
+    if not user:
+        if request.headers.get("HX-Request"):
+            return jsonify({"error": "Voluntario no encontrado."}), 404
+        flash("Voluntario no encontrado.", "error")
+        return redirect(url_for("volunteers.index"))
+
+    form = InlineEditPersonalDataForm()
+
+    if form.validate_on_submit():
+        # Update only personal data fields (not RUN)
+        profile = user.profile
+        profile.fecha_nacimiento = form.fecha_nacimiento.data
+        profile.ocupacion = form.ocupacion.data
+        profile.direccion = form.direccion.data
+        profile.telefono = form.telefono.data
+        profile.email = form.email.data
+        profile.fecha_alta = form.fecha_alta.data
+
+        db.session.commit()
+        flash("Datos personales actualizados correctamente.", "success")
+
+        # Handle HTMX requests
+        if request.headers.get("HX-Request"):
+            # Return updated data for the display fields
+            response_data = {
+                "fecha_nacimiento": (
+                    profile.fecha_nacimiento.strftime("%d-%m-%Y")
+                    if profile.fecha_nacimiento
+                    else "-"
+                ),
+                "ocupacion": profile.ocupacion or "-",
+                "telefono": profile.telefono or "-",
+                "email": profile.email or "-",
+                "direccion": profile.direccion or "-",
+                "fecha_alta": (
+                    profile.fecha_alta.strftime("%d-%m-%Y")
+                    if profile.fecha_alta
+                    else "-"
+                ),
+            }
+            return jsonify({"success": True, "data": response_data})
+
+        return redirect(url_for("volunteers.details", user_id=user.id))
+
+    else:
+        # Form validation failed
+        if request.headers.get("HX-Request"):
+            return (
+                jsonify(
+                    {
+                        "error": "Por favor, corrija los errores en el formulario.",
+                        "errors": form.errors,
+                    }
+                ),
+                400,
+            )
+
+        # For non-HTMX requests, render the edit page with errors
+        return render_template(
+            "volunteers/details.html",
+            user=user,
+            inline_form=form,
+            show_full=current_user.has_permission("volunteers.view_details"),
+        )
 
 
 @volunteers_bp.route("/<int:user_id>/cargos/add", methods=["GET", "POST"])
