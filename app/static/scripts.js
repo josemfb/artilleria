@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Disable accordion headers if all content links are placeholders
+    // Gray out accordion headers if all content links are placeholders
     document.querySelectorAll('.accordion-item').forEach(item => {
         const header = item.querySelector('.accordion-header');
         const content = item.querySelector('.accordion-content');

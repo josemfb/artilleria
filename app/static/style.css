@@ -276,12 +276,15 @@ a {
     border-left-color: var(--primary-green);
 }
 
-.sidebar a[href="#"],
-.accordion-header.disabled {
+ .sidebar a[href="#"] {
     color: var(--gray-light);
     pointer-events: none;
     cursor: default;
 }
+
+ .accordion-header.disabled {
+     color: var(--gray-light);
+ }
 
 /* ==========================================================================
    Volunteer Details Specific Styles
